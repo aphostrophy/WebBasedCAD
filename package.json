@@ -1,0 +1,19 @@
+{
+  "name": "web-cad",
+  "version": "1.0.0",
+  "description": "2D Web Based CAD (Computer-Aided Design)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aphostrophy/WebBasedCAD.git"
+  },
+  "author": "Jesson Yo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aphostrophy/WebBasedCAD/issues"
+  },
+  "homepage": "https://github.com/aphostrophy/WebBasedCAD#readme"
+}
