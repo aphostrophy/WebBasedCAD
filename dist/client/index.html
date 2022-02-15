@@ -9,13 +9,64 @@
     <style>
       body {
         overflow: hidden;
-        margin: 0px;
+        margin: 0 auto;
+        height: 100%;
+        width: 100%;
+      }
+      div.container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+      }
+      canvas {
+        border: 2px solid black;
+        background-color: black;
+        width: 100%;
+        height: 100%;
+      }
+      div.left {
+        width: 20%;
+      }
+      div.right {
+        width: 80%;
       }
     </style>
     <script src="bundle.js" type="module"></script>
   </head>
   <body>
-    <h1>Hello World</h1>
-    <canvas></canvas>
+    <div class="container">
+      <div class="left">
+        <h1>Tubes</h1>
+      </div>
+      <div class="right">
+        <canvas id="glcanvas" width="100%" height="100%"></canvas>
+      </div>
+    </div>
   </body>
+
+  <script>
+    main();
+
+    //
+    // Start here
+    //
+    function main() {
+      const canvas = document.querySelector('#glcanvas');
+      // Initialize the GL context
+      const gl = canvas.getContext('webgl');
+
+      // If we don't have a GL context, give up now
+      // Only continue if WebGL is available and working
+
+      if (!gl) {
+        alert('Unable to initialize WebGL. Your browser or machine may not support it.');
+        return;
+      }
+
+      // Set clear color to black, fully opaque
+      gl.clearColor(0.0, 0.0, 0.0, 1.0);
+      // Clear the color buffer with specified clear color
+      gl.clear(gl.COLOR_BUFFER_BIT);
+    }
+  </script>
 </html>
