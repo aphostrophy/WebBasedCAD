@@ -5,6 +5,14 @@ const path = require('path');
 module.exports = merge(common, {
   mode: 'development',
   devtool: 'eval-source-map',
+  module: {
+    rules: [
+      {
+        test: /\.glsl$/,
+        loader: 'webpack-glsl-loader',
+      },
+    ],
+  },
   devServer: {
     static: {
       directory: path.join(__dirname, '../../dist/client'),
