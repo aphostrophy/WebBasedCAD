@@ -10,7 +10,7 @@ const main = () => {
   }
   const gl = glUtils.checkWebGL(canvas);
 
-  const coordinates = generateSquareVertices(0, 0, 100);
+  const coordinates = generateSquareVertices({ x: 100, y: 100 }, 100);
   // const coordinates = generateRectangleVertices({ x: 100, y: 200 }, { x: 300, y: 800 });
   const vertices = new Float32Array(coordinates);
 

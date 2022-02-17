@@ -36,27 +36,27 @@ const calculateRealMousePosition = (e: MouseEvent) => {
   };
 };
 
-const generateSquareVertices = (x: number, y: number, size: number) => {
-  let output = [];
+const generateSquareVertices = (topLeftPoint: Position, size: number) => {
+  const vertices = new Array<number>();
   //First triangle
-  output.push(
-    convertCoordinates(x, y)[0],
-    convertCoordinates(x, y)[1],
-    convertCoordinates(x + size, y)[0],
-    convertCoordinates(x + size, y)[1],
-    convertCoordinates(x + size, y + size)[0],
-    convertCoordinates(x + size, y + size)[1]
+  const firstTriangleA = convertCoordinates(topLeftPoint.x, topLeftPoint.y);
+  const firstTriangleB = convertCoordinates(topLeftPoint.x, topLeftPoint.y + size);
+  const firstTriangleC = convertCoordinates(topLeftPoint.x + size, topLeftPoint.y + size);
+
+  const secondTriangleA = convertCoordinates(topLeftPoint.x, topLeftPoint.y);
+  const secondTriangleB = convertCoordinates(topLeftPoint.x + size, topLeftPoint.y);
+  const secondTriangleC = convertCoordinates(topLeftPoint.x + size, topLeftPoint.y + size);
+
+  vertices.push(
+    ...firstTriangleA,
+    ...firstTriangleB,
+    ...firstTriangleC,
+    ...secondTriangleA,
+    ...secondTriangleB,
+    ...secondTriangleC
   );
-  //Second triangle
-  output.push(
-    convertCoordinates(x, y)[0],
-    convertCoordinates(x, y)[1],
-    convertCoordinates(x, y + size)[0],
-    convertCoordinates(x, y + size)[1],
-    convertCoordinates(x + size, y + size)[0],
-    convertCoordinates(x + size, y + size)[1]
-  );
-  return output;
+
+  return new Float32Array(vertices);
 };
 
 const generateRectangleVertices = (topLeftPoint: Position, bottomRightPoint: Position) => {
