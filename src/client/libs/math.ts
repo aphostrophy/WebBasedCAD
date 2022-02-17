@@ -1,3 +1,5 @@
+import { Position } from '../typings';
+
 let canvas = document.querySelector('canvas');
 if (!canvas) {
   throw new Error('Canvas not found!');
@@ -57,9 +59,33 @@ const createSquare = (x: number, y: number, size: number) => {
   return output;
 };
 
+const generateRectangleVertices = (topLeftPoint: Position, bottomRightPoint: Position) => {
+  const vertices = new Array<number>();
+
+  const firstTriangleA = convertCoordinates(topLeftPoint.x, topLeftPoint.y);
+  const firstTriangleB = convertCoordinates(topLeftPoint.x, bottomRightPoint.y);
+  const firstTriangleC = convertCoordinates(bottomRightPoint.x, bottomRightPoint.y);
+
+  const secondTriangleA = convertCoordinates(bottomRightPoint.x, bottomRightPoint.y);
+  const secondTriangleB = convertCoordinates(bottomRightPoint.x, topLeftPoint.y);
+  const secondTriangleC = convertCoordinates(topLeftPoint.x, topLeftPoint.y);
+
+  vertices.push(
+    ...firstTriangleA,
+    ...firstTriangleB,
+    ...firstTriangleC,
+    ...secondTriangleA,
+    ...secondTriangleB,
+    ...secondTriangleC
+  );
+
+  return new Float32Array(vertices);
+};
+
 export {
   convertCoordinates,
   calculateClientMousePosition,
   calculateRealMousePosition,
   createSquare,
+  generateRectangleVertices,
 };

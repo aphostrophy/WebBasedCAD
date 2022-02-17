@@ -22,6 +22,6 @@ const trackCanvasMousePosition = (e: MouseEvent): void => {
   posY.innerHTML = y.toString();
 };
 
-const handleCanvasClickEvent = (e: MouseEvent): void => {};
+const handleCanvasClickEvent = (e: MouseEvent, appState: AppState): void => {};
 
 export { setupListeners, trackCanvasMousePosition };

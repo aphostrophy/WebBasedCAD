@@ -1,7 +1,7 @@
 import FragmentShaderSource from './shaders/FragmentShader.glsl';
 import VertexShaderSource from './shaders/VertexShader.glsl';
 import { glUtils } from './libs/glUtils';
-import { createSquare } from './libs/math';
+import { createSquare, generateRectangleVertices } from './libs/math';
 
 const main = () => {
   const canvas = document.querySelector('canvas');
@@ -10,15 +10,7 @@ const main = () => {
   }
   const gl = glUtils.checkWebGL(canvas);
 
-  const aspect = canvas.width / canvas.height;
-
-  // prettier-ignore
-  // const vertices = new Float32Array([
-  //   -0.25 ,0.25 * aspect, 0.25, 0.25 * aspect, 0.25, -0.25 * aspect,
-  //   -0.25, 0.25 * aspect, 0.25, -0.25 * aspect, -0.25, -0.25 * aspect,
-  // ]);
-
-  const coordinates = createSquare(100, 100, 300);
+  const coordinates = generateRectangleVertices({ x: 100, y: 200 }, { x: 300, y: 800 });
   const vertices = new Float32Array(coordinates);
 
   const positionBuffer = gl.createBuffer();

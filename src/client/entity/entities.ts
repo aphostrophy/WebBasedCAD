@@ -1,3 +1,5 @@
+import { Position } from '../typings';
+
 class Drawable {
   public vertices: Position[];
 
