@@ -8,6 +8,7 @@ let glUtils = {
 
     return gl;
   },
+
   getShader: (gl: WebGLRenderingContext, type: number, source: string) => {
     let shader = gl.createShader(type);
 
@@ -23,6 +24,37 @@ let glUtils = {
       throw new Error('Compile shader error');
     }
     return shader;
+  },
+
+  createProgram: (
+    gl: WebGLRenderingContext,
+    vertexShader: WebGLShader,
+    fragmentShader: WebGLShader
+  ) => {
+    let program = gl.createProgram();
+
+    if (!program) {
+      throw new Error('Create program error');
+    }
+
+    gl.attachShader(program, vertexShader);
+    gl.attachShader(program, fragmentShader);
+    gl.linkProgram(program);
+    gl.validateProgram(program);
+
+    if (
+      !gl.getProgramParameter(program, gl.LINK_STATUS) ||
+      !gl.getProgramParameter(program, gl.VALIDATE_STATUS)
+    ) {
+      let error = gl.getProgramInfoLog(program);
+      console.info(error);
+      gl.deleteProgram(program);
+      gl.deleteShader(fragmentShader);
+      gl.deleteShader(vertexShader);
+      throw new Error('Failed to link or validate program');
+    }
+
+    return program;
   },
 };
 

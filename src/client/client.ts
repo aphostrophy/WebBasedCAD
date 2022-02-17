@@ -23,10 +23,7 @@ gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colorData), gl.STATIC_DRAW);
 const vertexShader = glUtils.getShader(gl, gl.VERTEX_SHADER, VertexShaderSource);
 const fragmentShader = glUtils.getShader(gl, gl.FRAGMENT_SHADER, FragmentShaderSource);
 
-const program = gl.createProgram() as WebGLProgram;
-gl.attachShader(program, vertexShader);
-gl.attachShader(program, fragmentShader);
-gl.linkProgram(program);
+const program = glUtils.createProgram(gl, vertexShader, fragmentShader);
 
 const positionLocation = gl.getAttribLocation(program, 'position');
 gl.enableVertexAttribArray(positionLocation);
