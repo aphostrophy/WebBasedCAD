@@ -1,7 +1,7 @@
 import FragmentShaderSource from './shaders/FragmentShader.glsl';
 import VertexShaderSource from './shaders/VertexShader.glsl';
 import { glUtils } from './libs/glUtils';
-import { generateSquareVertices, generateRectangleVertices } from './libs/math';
+import { generateSquareVertices, generateRectangleVertices, generateLineVertices } from './libs/math';
 
 const main = () => {
   const canvas = document.querySelector('canvas');
@@ -12,7 +12,10 @@ const main = () => {
 
   const coordinates = generateSquareVertices({ x: 100, y: 100 }, 100);
   // const coordinates = generateRectangleVertices({ x: 100, y: 200 }, { x: 300, y: 800 });
-  const vertices = new Float32Array(coordinates);
+  // const vertices = new Float32Array(coordinates);
+
+  const lineCoordinate = generateLineVertices({ x: 100, y: 200 }, { x: 200, y: 300})
+  const vertices = new Float32Array(lineCoordinate);
 
   const positionBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
@@ -36,7 +39,8 @@ const main = () => {
   let uColor = gl.getUniformLocation(program, 'uColor');
   gl.uniform4fv(uColor, [0.0, 0.3, 0.0, 1.0]);
 
-  gl.drawArrays(gl.TRIANGLES, 0, numItems);
+  // gl.drawArrays(gl.TRIANGLES, 0, numItems);
+  gl.drawArrays(gl.LINES, 0, numItems);
 };
 
 export default main;
