@@ -17,18 +17,12 @@ const vertices = new Float32Array([
   -0.25, 0.25 * aspect, 0.25, -0.25 * aspect, -0.25, -0.25 * aspect,
 ]);
 
-const colorData = [1, 0, 0, 0, 1, 0, 0, 0, 1];
-
 const positionBuffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
 
 const itemSize = 2;
 const numItems = vertices.length / itemSize;
-
-const colorBuffer = gl.createBuffer();
-gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colorData), gl.STATIC_DRAW);
 
 const vertexShader = glUtils.getShader(gl, gl.VERTEX_SHADER, VertexShaderSource);
 const fragmentShader = glUtils.getShader(gl, gl.FRAGMENT_SHADER, FragmentShaderSource);
