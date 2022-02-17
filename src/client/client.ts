@@ -1,20 +1,30 @@
 import FragmentShaderSource from './shaders/FragmentShader.glsl';
 import VertexShaderSource from './shaders/VertexShader.glsl';
+import './libs/resizer';
 import { glUtils } from './libs/glUtils';
 
 const canvas = document.querySelector('canvas');
+if (!canvas) {
+  throw new Error('Canvas not found!');
+}
 const gl = glUtils.checkWebGL(canvas);
 
-gl.clearColor(0.0, 0.0, 0.0, 1.0);
-gl.clear(gl.COLOR_BUFFER_BIT);
+const aspect = canvas.width / canvas.height;
 
-const vertexData = [0, 1, 0, 1, -1, 0, -1, -1, 0];
+// prettier-ignore
+const vertices = new Float32Array([
+  -0.25 ,0.25 * aspect, 0.25, 0.25 * aspect, 0.25, -0.25 * aspect,
+  -0.25, 0.25 * aspect, 0.25, -0.25 * aspect, -0.25, -0.25 * aspect,
+]);
 
 const colorData = [1, 0, 0, 0, 1, 0, 0, 0, 1];
 
 const positionBuffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexData), gl.STATIC_DRAW);
+gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+
+const itemSize = 2;
+const numItems = vertices.length / itemSize;
 
 const colorBuffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
@@ -28,12 +38,11 @@ const program = glUtils.createProgram(gl, vertexShader, fragmentShader);
 const positionLocation = gl.getAttribLocation(program, 'position');
 gl.enableVertexAttribArray(positionLocation);
 gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
-
-const colorLocation = gl.getAttribLocation(program, 'color');
-gl.enableVertexAttribArray(colorLocation);
-gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-gl.vertexAttribPointer(colorLocation, 3, gl.FLOAT, false, 0, 0);
+gl.vertexAttribPointer(positionLocation, itemSize, gl.FLOAT, false, 0, 0);
 
 gl.useProgram(program);
-gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+let uColor = gl.getUniformLocation(program, 'uColor');
+gl.uniform4fv(uColor, [0.0, 0.3, 0.0, 1.0]);
+
+gl.drawArrays(gl.TRIANGLES, 0, numItems);
