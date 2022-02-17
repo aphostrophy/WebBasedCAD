@@ -82,10 +82,25 @@ const generateRectangleVertices = (topLeftPoint: Position, bottomRightPoint: Pos
   return new Float32Array(vertices);
 };
 
+const generateLineVertices = (firstPoint: Position, secondPoint: Position) => {
+  const vertices = new Array<number>();
+
+  const lineFirstPoint = convertCoordinates(firstPoint.x, firstPoint.y);
+  const lineSecondPoint = convertCoordinates(secondPoint.x, secondPoint.y);
+
+  vertices.push(
+    ...lineFirstPoint,
+    ...lineSecondPoint
+  );
+
+  return new Float32Array(vertices);
+}
+
 export {
   convertCoordinates,
   calculateClientMousePosition,
   calculateRealMousePosition,
   generateSquareVertices,
   generateRectangleVertices,
+  generateLineVertices
 };
