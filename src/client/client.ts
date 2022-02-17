@@ -1,8 +1,9 @@
 import FragmentShaderSource from './shaders/FragmentShader.glsl';
 import VertexShaderSource from './shaders/VertexShader.glsl';
+import { glUtils } from './libs/glUtils';
 
 const canvas = document.querySelector('canvas');
-const gl = window.glUtils.checkWebGL(canvas);
+const gl = glUtils.checkWebGL(canvas);
 
 gl.clearColor(0.0, 0.0, 0.0, 1.0);
 gl.clear(gl.COLOR_BUFFER_BIT);
@@ -19,21 +20,8 @@ const colorBuffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colorData), gl.STATIC_DRAW);
 
-const vertexShader: WebGLShader = gl.createShader(gl.VERTEX_SHADER) as WebGLShader;
-if (!(vertexShader instanceof WebGLShader)) {
-  throw new Error('Shader error');
-}
-
-gl.shaderSource(vertexShader, VertexShaderSource);
-gl.compileShader(vertexShader);
-
-const fragmentShader: WebGLShader = gl.createShader(gl.FRAGMENT_SHADER) as WebGLShader;
-if (!(fragmentShader instanceof WebGLShader)) {
-  throw new Error('Shader error');
-}
-
-gl.shaderSource(fragmentShader, FragmentShaderSource);
-gl.compileShader(fragmentShader);
+const vertexShader = glUtils.getShader(gl, gl.VERTEX_SHADER, VertexShaderSource);
+const fragmentShader = glUtils.getShader(gl, gl.FRAGMENT_SHADER, FragmentShaderSource);
 
 const program = gl.createProgram() as WebGLProgram;
 gl.attachShader(program, vertexShader);
