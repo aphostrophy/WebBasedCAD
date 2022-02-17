@@ -9,8 +9,8 @@ const bound = canvas.getBoundingClientRect();
 
 const convertCoordinates = (x: number, y: number) => {
   canvas = canvas as HTMLCanvasElement;
-  let midX = canvas.width / 2;
-  let midY = canvas.height / 2;
+  let midX = (canvas.width - bound.left) / 2;
+  let midY = (canvas.height - bound.top) / 2;
   let outputX = (x - midX) / midX;
   let outputY = (midY - y) / midY;
   return [outputX, outputY];
@@ -36,7 +36,7 @@ const calculateRealMousePosition = (e: MouseEvent) => {
   };
 };
 
-const createSquare = (x: number, y: number, size: number) => {
+const generateSquareVertices = (x: number, y: number, size: number) => {
   let output = [];
   //First triangle
   output.push(
@@ -86,6 +86,6 @@ export {
   convertCoordinates,
   calculateClientMousePosition,
   calculateRealMousePosition,
-  createSquare,
+  generateSquareVertices,
   generateRectangleVertices,
 };

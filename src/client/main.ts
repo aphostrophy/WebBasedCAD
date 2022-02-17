@@ -1,7 +1,7 @@
 import FragmentShaderSource from './shaders/FragmentShader.glsl';
 import VertexShaderSource from './shaders/VertexShader.glsl';
 import { glUtils } from './libs/glUtils';
-import { createSquare, generateRectangleVertices } from './libs/math';
+import { generateSquareVertices, generateRectangleVertices } from './libs/math';
 
 const main = () => {
   const canvas = document.querySelector('canvas');
@@ -10,7 +10,8 @@ const main = () => {
   }
   const gl = glUtils.checkWebGL(canvas);
 
-  const coordinates = generateRectangleVertices({ x: 100, y: 200 }, { x: 300, y: 800 });
+  const coordinates = generateSquareVertices(0, 0, 100);
+  // const coordinates = generateRectangleVertices({ x: 100, y: 200 }, { x: 300, y: 800 });
   const vertices = new Float32Array(coordinates);
 
   const positionBuffer = gl.createBuffer();
