@@ -4,7 +4,7 @@ import { setupListeners } from '../libs/listener';
 import { AppStateMode, DrawableType, Position } from '../typings';
 import FragmentShaderSource from '../shaders/FragmentShader.glsl';
 import VertexShaderSource from '../shaders/VertexShader.glsl';
-import { createSquare, generateRectangleVertices } from '../libs/math';
+import { generateSquareVertices, generateRectangleVertices } from '../libs/math';
 
 const canvas = document.querySelector('canvas');
 if (!canvas) {

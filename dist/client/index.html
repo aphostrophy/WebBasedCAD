@@ -7,6 +7,7 @@
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="stylesheet" href="index.css" />
     <link rel="stylesheet" href="bootstrap.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto" />
     <title>AutoCAD Web App</title>
     <script src="bundle.js" type="module"></script>
   </head>
@@ -14,6 +15,19 @@
     <div class="container">
       <div class="left">
         <h1>Tubes</h1>
+        <div>
+          <label class="form-label">Item shape</label>
+          <select
+            id="menushape"
+            class="form-select form-select-sm"
+            aria-label="Default select example"
+          >
+            <option value="0">Line</option>
+            <option value="1">Square</option>
+            <option value="2">Rectangle</option>
+            <option value="3">Polygon</option>
+          </select>
+        </div>
         <div class="debug-container">
           <div class="debug-row">
             <div class="debug-label">Mouse Position</div>

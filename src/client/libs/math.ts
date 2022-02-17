@@ -9,8 +9,8 @@ const bound = canvas.getBoundingClientRect();
 
 const convertCoordinates = (x: number, y: number) => {
   canvas = canvas as HTMLCanvasElement;
-  let midX = canvas.width / 2;
-  let midY = canvas.height / 2;
+  let midX = (canvas.width - bound.left) / 2;
+  let midY = (canvas.height - bound.top) / 2;
   let outputX = (x - midX) / midX;
   let outputY = (midY - y) / midY;
   return [outputX, outputY];
@@ -36,27 +36,27 @@ const calculateRealMousePosition = (e: MouseEvent) => {
   };
 };
 
-const createSquare = (x: number, y: number, size: number) => {
-  let output = [];
+const generateSquareVertices = (topLeftPoint: Position, size: number) => {
+  const vertices = new Array<number>();
   //First triangle
-  output.push(
-    convertCoordinates(x, y)[0],
-    convertCoordinates(x, y)[1],
-    convertCoordinates(x + size, y)[0],
-    convertCoordinates(x + size, y)[1],
-    convertCoordinates(x + size, y + size)[0],
-    convertCoordinates(x + size, y + size)[1]
+  const firstTriangleA = convertCoordinates(topLeftPoint.x, topLeftPoint.y);
+  const firstTriangleB = convertCoordinates(topLeftPoint.x, topLeftPoint.y + size);
+  const firstTriangleC = convertCoordinates(topLeftPoint.x + size, topLeftPoint.y + size);
+
+  const secondTriangleA = convertCoordinates(topLeftPoint.x, topLeftPoint.y);
+  const secondTriangleB = convertCoordinates(topLeftPoint.x + size, topLeftPoint.y);
+  const secondTriangleC = convertCoordinates(topLeftPoint.x + size, topLeftPoint.y + size);
+
+  vertices.push(
+    ...firstTriangleA,
+    ...firstTriangleB,
+    ...firstTriangleC,
+    ...secondTriangleA,
+    ...secondTriangleB,
+    ...secondTriangleC
   );
-  //Second triangle
-  output.push(
-    convertCoordinates(x, y)[0],
-    convertCoordinates(x, y)[1],
-    convertCoordinates(x, y + size)[0],
-    convertCoordinates(x, y + size)[1],
-    convertCoordinates(x + size, y + size)[0],
-    convertCoordinates(x + size, y + size)[1]
-  );
-  return output;
+
+  return new Float32Array(vertices);
 };
 
 const generateRectangleVertices = (topLeftPoint: Position, bottomRightPoint: Position) => {
@@ -82,10 +82,25 @@ const generateRectangleVertices = (topLeftPoint: Position, bottomRightPoint: Pos
   return vertices;
 };
 
+const generateLineVertices = (firstPoint: Position, secondPoint: Position) => {
+  const vertices = new Array<number>();
+
+  const lineFirstPoint = convertCoordinates(firstPoint.x, firstPoint.y);
+  const lineSecondPoint = convertCoordinates(secondPoint.x, secondPoint.y);
+
+  vertices.push(
+    ...lineFirstPoint,
+    ...lineSecondPoint
+  );
+
+  return new Float32Array(vertices);
+}
+
 export {
   convertCoordinates,
   calculateClientMousePosition,
   calculateRealMousePosition,
-  createSquare,
+  generateSquareVertices,
   generateRectangleVertices,
+  generateLineVertices
 };
