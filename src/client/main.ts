@@ -1,6 +1,7 @@
 import FragmentShaderSource from './shaders/FragmentShader.glsl';
 import VertexShaderSource from './shaders/VertexShader.glsl';
 import { glUtils } from './libs/glUtils';
+import { createSquare } from './libs/math';
 
 const main = () => {
   const canvas = document.querySelector('canvas');
@@ -12,10 +13,13 @@ const main = () => {
   const aspect = canvas.width / canvas.height;
 
   // prettier-ignore
-  const vertices = new Float32Array([
-    -0.25 ,0.25 * aspect, 0.25, 0.25 * aspect, 0.25, -0.25 * aspect,
-    -0.25, 0.25 * aspect, 0.25, -0.25 * aspect, -0.25, -0.25 * aspect,
-  ]);
+  // const vertices = new Float32Array([
+  //   -0.25 ,0.25 * aspect, 0.25, 0.25 * aspect, 0.25, -0.25 * aspect,
+  //   -0.25, 0.25 * aspect, 0.25, -0.25 * aspect, -0.25, -0.25 * aspect,
+  // ]);
+
+  const coordinates = createSquare(100, 100, 300);
+  const vertices = new Float32Array(coordinates);
 
   const positionBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
