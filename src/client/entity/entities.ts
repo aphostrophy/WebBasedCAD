@@ -1,5 +1,9 @@
 class Drawable {
-  public pos: [number, number] = [0, 0];
+  public vertices: Position[];
+
+  constructor() {
+    this.vertices = [];
+  }
 }
 
 export { Drawable };
