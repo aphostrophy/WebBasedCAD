@@ -15,38 +15,57 @@ const gl = glUtils.checkWebGL(canvas);
 class AppState {
   private mode: AppStateMode = 'IDLE';
   private shape: DrawableType = 'RECTANGLE';
-  private gl: WebGLRenderingContext = gl;
+  private gl: WebGLRenderingContext;
   private drawables: Drawable[];
   private vertexShader: WebGLShader;
   private fragmentShader: WebGLShader;
+  private program: WebGLProgram;
 
   constructor() {
+    this.gl = gl;
     this.drawables = [];
     this.vertexShader = glUtils.getShader(gl, gl.VERTEX_SHADER, VertexShaderSource);
     this.fragmentShader = glUtils.getShader(gl, gl.FRAGMENT_SHADER, FragmentShaderSource);
+    this.program = glUtils.createProgram(gl, this.vertexShader, this.fragmentShader);
     setupListeners(this);
   }
 
   public run() {
-    const vertexShader = this.vertexShader;
-    const fragmentShader = this.fragmentShader;
-
-    const program = glUtils.createProgram(gl, vertexShader, fragmentShader);
+    const program = this.program;
 
     const coordinates = generateRectangleVertices({ x: 100, y: 200 }, { x: 300, y: 800 });
     const rectangle = new Drawable(gl, program, gl.TRIANGLES, [0.0, 0.3, 0.0, 1.0], coordinates);
-    rectangle.draw();
 
     const coordinates2 = generateRectangleVertices({ x: 200, y: 100 }, { x: 800, y: 300 });
     const rectangle2 = new Drawable(gl, program, gl.TRIANGLES, [0.0, 0.3, 0.0, 1.0], coordinates2);
-    rectangle2.draw();
+
+    this.addDrawable(rectangle);
+    this.addDrawable(rectangle2);
+
+    requestAnimationFrame(this.render.bind(this));
   }
 
-  public setIdle() {
+  private render(now: number) {
+    this.draw();
+    requestAnimationFrame(this.render.bind(this));
+  }
+
+  private draw() {
+    for (let i = 0; i < this.drawables.length; i++) {
+      const drawable = this.drawables[i];
+      drawable.draw();
+    }
+  }
+
+  private addDrawable(drawable: Drawable) {
+    this.drawables.push(drawable);
+  }
+
+  private setIdle() {
     this.mode = 'IDLE';
   }
 
-  public setDrawing(shape: DrawableType) {
+  private setDrawing(shape: DrawableType) {
     this.mode = 'DRAWING';
     this.shape = shape;
   }
