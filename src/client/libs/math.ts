@@ -1,9 +1,9 @@
-import AppState from '../entity/AppState';
-
 let canvas = document.querySelector('canvas');
 if (!canvas) {
   throw new Error('Canvas not found!');
 }
+
+const bound = canvas.getBoundingClientRect();
 
 const convertCoordinates = (x: number, y: number) => {
   canvas = canvas as HTMLCanvasElement;
@@ -12,6 +12,26 @@ const convertCoordinates = (x: number, y: number) => {
   let outputX = (x - midX) / midX;
   let outputY = (midY - y) / midY;
   return [outputX, outputY];
+};
+
+const calculateClientMousePosition = (e: MouseEvent) => {
+  canvas = canvas as HTMLCanvasElement;
+  const x = e.pageX - Math.floor(bound.left);
+  const y = e.pageY - Math.floor(bound.top);
+  return {
+    x,
+    y,
+  };
+};
+
+const calculateRealMousePosition = (e: MouseEvent) => {
+  canvas = canvas as HTMLCanvasElement;
+  const x = e.pageX - bound.left;
+  const y = e.pageY - bound.top;
+  return {
+    x,
+    y,
+  };
 };
 
 const createSquare = (x: number, y: number, size: number) => {
@@ -37,4 +57,9 @@ const createSquare = (x: number, y: number, size: number) => {
   return output;
 };
 
-export { convertCoordinates, createSquare };
+export {
+  convertCoordinates,
+  calculateClientMousePosition,
+  calculateRealMousePosition,
+  createSquare,
+};
