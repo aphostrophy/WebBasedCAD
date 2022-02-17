@@ -79,7 +79,7 @@ const generateRectangleVertices = (topLeftPoint: Position, bottomRightPoint: Pos
     ...secondTriangleC
   );
 
-  return new Float32Array(vertices);
+  return vertices;
 };
 
 export {

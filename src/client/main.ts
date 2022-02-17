@@ -2,6 +2,7 @@ import FragmentShaderSource from './shaders/FragmentShader.glsl';
 import VertexShaderSource from './shaders/VertexShader.glsl';
 import { glUtils } from './libs/glUtils';
 import { createSquare, generateRectangleVertices } from './libs/math';
+import { Drawable } from './entity/entities';
 
 const main = () => {
   const canvas = document.querySelector('canvas');
@@ -10,32 +11,18 @@ const main = () => {
   }
   const gl = glUtils.checkWebGL(canvas);
 
-  const coordinates = generateRectangleVertices({ x: 100, y: 200 }, { x: 300, y: 800 });
-  const vertices = new Float32Array(coordinates);
-
-  const positionBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
-
-  const itemSize = 2;
-  const numItems = vertices.length / itemSize;
-
   const vertexShader = glUtils.getShader(gl, gl.VERTEX_SHADER, VertexShaderSource);
   const fragmentShader = glUtils.getShader(gl, gl.FRAGMENT_SHADER, FragmentShaderSource);
 
   const program = glUtils.createProgram(gl, vertexShader, fragmentShader);
 
-  const positionLocation = gl.getAttribLocation(program, 'position');
-  gl.enableVertexAttribArray(positionLocation);
-  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-  gl.vertexAttribPointer(positionLocation, itemSize, gl.FLOAT, false, 0, 0);
+  const coordinates = generateRectangleVertices({ x: 100, y: 200 }, { x: 300, y: 800 });
+  const rectangle = new Drawable(gl, program, gl.TRIANGLES, [0.0, 0.3, 0.0, 1.0], coordinates);
+  rectangle.draw();
 
-  gl.useProgram(program);
-
-  let uColor = gl.getUniformLocation(program, 'uColor');
-  gl.uniform4fv(uColor, [0.0, 0.3, 0.0, 1.0]);
-
-  gl.drawArrays(gl.TRIANGLES, 0, numItems);
+  const coordinates2 = generateRectangleVertices({ x: 200, y: 100 }, { x: 800, y: 300 });
+  const rectangle2 = new Drawable(gl, program, gl.TRIANGLES, [0.0, 0.3, 0.0, 1.0], coordinates2);
+  rectangle2.draw();
 };
 
 export default main;
