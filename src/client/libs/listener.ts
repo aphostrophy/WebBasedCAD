@@ -28,15 +28,28 @@ const trackCanvasMousePosition = (e: MouseEvent, appState: AppState): void => {
   appState.setMousePosition(clientPosition, realPosition);
 };
 
-const handleCanvasClickEvent = (e: MouseEvent, appState: AppState): void => {};
+const handleCanvasClickEvent = (e: MouseEvent, appState: AppState): void => {
+  const mode = appState.getAppStateMode();
+  const realPos = calculateRealMousePosition(e);
+
+  if (mode === 'DRAWING') {
+    console.log('ADD', realPos);
+    appState.addVertex(realPos);
+  }
+};
 
 const handleKeyboardPress = (ev: KeyboardEvent, appState: AppState): void => {
+  const mode = appState.getAppStateMode();
   if (ev.key === 'q') {
-    if (appState.getAppStateMode() !== 'IDLE') {
+    if (mode !== 'IDLE') {
       appState.setIdle();
     } else {
       appState.setDrawing();
     }
+  }
+
+  if (ev.key === 'Enter') {
+    appState.submitDrawing();
   }
 };
 

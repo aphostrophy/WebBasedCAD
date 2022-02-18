@@ -2,10 +2,14 @@ import { Drawable } from './entities';
 import DOMHandler from './DOMHandler';
 import { glUtils } from '../libs/glUtils';
 import { setupListeners } from '../libs/listener';
-import { AppStateMode, DrawableType, Position } from '../typings';
+import { AppStateMode, DrawableType, NativePosition, Position } from '../typings';
 import FragmentShaderSource from '../shaders/FragmentShader.glsl';
 import VertexShaderSource from '../shaders/VertexShader.glsl';
-import { generateSquareVertices, generateRectangleVertices } from '../libs/math';
+import {
+  generateSquareVertices,
+  generateRectangleVertices,
+  calculateNativePosition,
+} from '../libs/math';
 
 class AppState {
   private mode: AppStateMode = 'IDLE';
@@ -17,6 +21,8 @@ class AppState {
   private program: WebGLProgram;
   private domHandler: DOMHandler;
 
+  private pendingVertices: Position[];
+
   constructor() {
     this.domHandler = new DOMHandler();
     this.gl = this.domHandler.getGl();
@@ -25,6 +31,8 @@ class AppState {
     this.vertexShader = glUtils.getShader(this.gl, this.gl.VERTEX_SHADER, VertexShaderSource);
     this.fragmentShader = glUtils.getShader(this.gl, this.gl.FRAGMENT_SHADER, FragmentShaderSource);
     this.program = glUtils.createProgram(this.gl, this.vertexShader, this.fragmentShader);
+    this.pendingVertices = [];
+    this.domHandler.setAppStateMode(this.mode);
     setupListeners(this);
   }
 
@@ -41,17 +49,17 @@ class AppState {
       [0.0, 0.3, 0.0, 1.0],
       coordinates
     );
+    this.addDrawable(rectangle);
 
-    const coordinates2 = generateRectangleVertices({ x: 200, y: 100 }, { x: 800, y: 300 });
+    const coordinates2 = generateRectangleVertices({ x: 200, y: 300 }, { x: 400, y: 500 });
     const rectangle2 = new Drawable(
       this.gl,
       program,
       this.gl.TRIANGLES,
-      [0.0, 0.3, 0.0, 1.0],
+      [0.5, 0.3, 0.0, 1.0],
       coordinates2
     );
 
-    this.addDrawable(rectangle);
     this.addDrawable(rectangle2);
 
     requestAnimationFrame(this.render.bind(this));
@@ -78,6 +86,7 @@ class AppState {
 
   private addDrawable(drawable: Drawable) {
     this.drawables.push(drawable);
+    this.clearPendingVertices();
   }
 
   public getAppStateMode() {
@@ -87,6 +96,7 @@ class AppState {
   public setIdle() {
     this.mode = 'IDLE';
 
+    this.pendingVertices = [];
     this.domHandler.setAppStateMode(this.mode);
   }
 
@@ -101,6 +111,35 @@ class AppState {
     const { x: realX, y: realY } = realPos;
 
     this.domHandler.setMousePosition({ x: clientX, y: clientY });
+  }
+
+  public addVertex(realPos: Position) {
+    this.pendingVertices.push(realPos);
+  }
+
+  public submitDrawing() {
+    if (this.shape === 'RECTANGLE') {
+      if (this.pendingVertices.length == 2) {
+        const coordinates = generateRectangleVertices(
+          this.pendingVertices[0],
+          this.pendingVertices[1]
+        );
+        const rectangle = new Drawable(
+          this.gl,
+          this.program,
+          this.gl.TRIANGLES,
+          [0.0, 0.3, 0.0, 1.0],
+          coordinates
+        );
+        this.addDrawable(rectangle);
+      } else {
+        alert('Incorrect amount of vertices for a rectangle!');
+      }
+    }
+  }
+
+  public clearPendingVertices() {
+    this.pendingVertices = [];
   }
 
   public getDOMHandler() {

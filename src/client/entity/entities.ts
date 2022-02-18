@@ -34,7 +34,7 @@ class Drawable {
     gl.bufferData(
       gl.ARRAY_BUFFER,
       new Float32Array(this._flattenVertices(this.vertices)),
-      gl.STATIC_DRAW
+      gl.DYNAMIC_DRAW
     );
   }
 
