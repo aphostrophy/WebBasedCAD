@@ -13,7 +13,7 @@ import {
 
 class AppState {
   private mode: AppStateMode = 'IDLE';
-  private shape: DrawableType = 'RECTANGLE';
+  private shape: DrawableType = 'LINE';
   private gl: WebGLRenderingContext;
   private drawables: Drawable[];
   private vertexShader: WebGLShader;
@@ -32,8 +32,14 @@ class AppState {
     this.fragmentShader = glUtils.getShader(this.gl, this.gl.FRAGMENT_SHADER, FragmentShaderSource);
     this.program = glUtils.createProgram(this.gl, this.vertexShader, this.fragmentShader);
     this.pendingVertices = [];
-    this.domHandler.setAppStateMode(this.mode);
+
+    this.initDebugger();
     setupListeners(this);
+  }
+
+  private initDebugger() {
+    this.domHandler.setAppStateMode(this.mode);
+    this.domHandler.setDrawShape(this.shape);
   }
 
   public run() {
@@ -144,6 +150,11 @@ class AppState {
 
   public getDOMHandler() {
     return this.domHandler;
+  }
+
+  public setDrawShape(shape: DrawableType) {
+    this.shape = shape;
+    this.domHandler.setDrawShape(shape);
   }
 }
 
