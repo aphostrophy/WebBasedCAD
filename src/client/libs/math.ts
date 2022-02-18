@@ -63,7 +63,7 @@ const generateSquareVertices = (topLeftPoint: Position, size: number) => {
     ...secondTriangleC
   );
 
-  return new Float32Array(vertices);
+  return vertices;
 };
 
 const generateRectangleVertices = (topLeftPoint: Position, bottomRightPoint: Position) => {
@@ -97,7 +97,7 @@ const generateLineVertices = (firstPoint: Position, secondPoint: Position) => {
 
   vertices.push(...lineFirstPoint, ...lineSecondPoint);
 
-  return new Float32Array(vertices);
+  return vertices;
 };
 
 export {

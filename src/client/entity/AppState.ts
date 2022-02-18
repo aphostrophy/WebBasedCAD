@@ -9,6 +9,7 @@ import {
   generateSquareVertices,
   generateRectangleVertices,
   calculateNativePosition,
+  generateLineVertices,
 } from '../libs/math';
 
 class AppState {
@@ -65,8 +66,11 @@ class AppState {
       [0.5, 0.3, 0.0, 1.0],
       coordinates2
     );
-
     this.addDrawable(rectangle2);
+
+    const coordinates3 = generateLineVertices({ x: 0, y: 0 }, { x: 500, y: 600 });
+    const line = new Drawable(this.gl, program, this.gl.LINES, [0.5, 0.3, 0.0, 1.0], coordinates3);
+    this.addDrawable(line);
 
     requestAnimationFrame(this.render.bind(this));
   }
