@@ -1,25 +1,27 @@
 import AppState from '../entity/AppState';
-import { glUtils } from '../libs/glUtils';
-import { calculateClientMousePosition } from '../libs/math';
-
-let canvas = document.querySelector('canvas');
-if (!canvas) {
-  throw new Error('Canvas not found!');
-}
-const gl = glUtils.checkWebGL(canvas);
-
-const posX = document.querySelector('.mouse-pos-x') as HTMLSpanElement;
-const posY = document.querySelector('.mouse-pos-y') as HTMLSpanElement;
+import { calculateClientMousePosition, calculateRealMousePosition } from '../libs/math';
+import { resizer } from '../libs/resizer';
+import { Position } from '../typings';
 
 const setupListeners = (appState: AppState) => {
-  canvas = canvas as HTMLCanvasElement;
-  canvas.addEventListener('mousemove', trackCanvasMousePosition);
+  const domHandler = appState.getDOMHandler();
+
+  domHandler.window.addEventListener('resize', () =>
+    resizer(domHandler.canvas, domHandler.getGl())
+  );
+
+  domHandler.canvas.addEventListener('mousemove', (ev: MouseEvent) =>
+    trackCanvasMousePosition(ev, appState)
+  );
+  domHandler.canvas.addEventListener('click', (ev: MouseEvent) =>
+    handleCanvasClickEvent(ev, appState)
+  );
 };
 
-const trackCanvasMousePosition = (e: MouseEvent): void => {
-  const { x, y } = calculateClientMousePosition(e);
-  posX.innerHTML = x.toString();
-  posY.innerHTML = y.toString();
+const trackCanvasMousePosition = (e: MouseEvent, appState: AppState): void => {
+  const clientPosition = calculateClientMousePosition(e);
+  const realPosition = calculateRealMousePosition(e);
+  appState.setMousePosition(clientPosition, realPosition);
 };
 
 const handleCanvasClickEvent = (e: MouseEvent, appState: AppState): void => {};
