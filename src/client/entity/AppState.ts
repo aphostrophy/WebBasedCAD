@@ -22,6 +22,8 @@ class AppState {
   private program: WebGLProgram;
   private domHandler: DOMHandler;
 
+  private realMousePosition: Position;
+
   private pendingVertices: Position[];
 
   constructor() {
@@ -33,7 +35,7 @@ class AppState {
     this.fragmentShader = glUtils.getShader(this.gl, this.gl.FRAGMENT_SHADER, FragmentShaderSource);
     this.program = glUtils.createProgram(this.gl, this.vertexShader, this.fragmentShader);
     this.pendingVertices = [];
-
+    this.realMousePosition = { x: 0, y: 0 };
     this.initDebugger();
     setupListeners(this);
   }
@@ -94,6 +96,21 @@ class AppState {
       const drawable = this.drawables[i];
       drawable.draw();
     }
+
+    if (this.pendingVertices.length > 0) {
+      const helperLineCoordinates = generateLineVertices(
+        this.pendingVertices[0],
+        this.realMousePosition
+      );
+      const helperLine = new Drawable(
+        this.gl,
+        this.program,
+        this.gl.LINES,
+        [0.5, 0.3, 0.0, 1.0],
+        helperLineCoordinates
+      );
+      helperLine.draw();
+    }
   }
 
   private addDrawable(drawable: Drawable) {
@@ -123,6 +140,7 @@ class AppState {
     const { x: realX, y: realY } = realPos;
 
     this.domHandler.setMousePosition({ x: clientX, y: clientY });
+    this.realMousePosition = { x: realX, y: realY };
   }
 
   public addVertex(realPos: Position) {
