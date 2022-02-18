@@ -10,6 +10,10 @@ const setupListeners = (appState: AppState) => {
     resizer(domHandler.canvas, domHandler.getGl())
   );
 
+  domHandler.window.addEventListener('keydown', (ev: KeyboardEvent) =>
+    handleKeyboardPress(ev, appState)
+  );
+
   domHandler.canvas.addEventListener('mousemove', (ev: MouseEvent) =>
     trackCanvasMousePosition(ev, appState)
   );
@@ -26,4 +30,14 @@ const trackCanvasMousePosition = (e: MouseEvent, appState: AppState): void => {
 
 const handleCanvasClickEvent = (e: MouseEvent, appState: AppState): void => {};
 
-export { setupListeners, trackCanvasMousePosition };
+const handleKeyboardPress = (ev: KeyboardEvent, appState: AppState): void => {
+  if (ev.key === 'q') {
+    if (appState.getAppStateMode() !== 'IDLE') {
+      appState.setIdle();
+    } else {
+      appState.setDrawing();
+    }
+  }
+};
+
+export { setupListeners };

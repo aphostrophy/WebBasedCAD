@@ -80,13 +80,20 @@ class AppState {
     this.drawables.push(drawable);
   }
 
-  private setIdle() {
-    this.mode = 'IDLE';
+  public getAppStateMode() {
+    return this.mode;
   }
 
-  private setDrawing(shape: DrawableType) {
+  public setIdle() {
+    this.mode = 'IDLE';
+
+    this.domHandler.setAppStateMode(this.mode);
+  }
+
+  public setDrawing() {
     this.mode = 'DRAWING';
-    this.shape = shape;
+
+    this.domHandler.setAppStateMode(this.mode);
   }
 
   public setMousePosition(clientPos: Position, realPos: Position) {
