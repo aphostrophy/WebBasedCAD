@@ -1,9 +1,6 @@
 import { Position } from '../typings';
 
-let canvas = document.querySelector('canvas');
-if (!canvas) {
-  throw new Error('Canvas not found!');
-}
+let canvas = document.querySelector('canvas') as HTMLCanvasElement;
 
 const bound = canvas.getBoundingClientRect();
 
@@ -14,6 +11,16 @@ const convertCoordinates = (x: number, y: number) => {
   let outputX = (x - midX) / midX;
   let outputY = (midY - y) / midY;
   return [outputX, outputY];
+};
+
+const calculateNativePosition = (realPos: Position) => {
+  const { x: realX, y: realY } = realPos;
+  const midX = (canvas.width - bound.left) / 2;
+  const midY = (canvas.height - bound.top) / 2;
+  return {
+    x: (realX - midX) / midX,
+    y: (midY - realY) / midY,
+  };
 };
 
 const calculateClientMousePosition = (e: MouseEvent) => {
@@ -38,7 +45,7 @@ const calculateRealMousePosition = (e: MouseEvent) => {
 
 const generateSquareVertices = (topLeftPoint: Position, size: number) => {
   const vertices = new Array<number>();
-  //First triangle
+
   const firstTriangleA = convertCoordinates(topLeftPoint.x, topLeftPoint.y);
   const firstTriangleB = convertCoordinates(topLeftPoint.x, topLeftPoint.y + size);
   const firstTriangleC = convertCoordinates(topLeftPoint.x + size, topLeftPoint.y + size);
@@ -79,7 +86,7 @@ const generateRectangleVertices = (topLeftPoint: Position, bottomRightPoint: Pos
     ...secondTriangleC
   );
 
-  return new Float32Array(vertices);
+  return vertices;
 };
 
 const generateLineVertices = (firstPoint: Position, secondPoint: Position) => {
@@ -88,19 +95,16 @@ const generateLineVertices = (firstPoint: Position, secondPoint: Position) => {
   const lineFirstPoint = convertCoordinates(firstPoint.x, firstPoint.y);
   const lineSecondPoint = convertCoordinates(secondPoint.x, secondPoint.y);
 
-  vertices.push(
-    ...lineFirstPoint,
-    ...lineSecondPoint
-  );
+  vertices.push(...lineFirstPoint, ...lineSecondPoint);
 
   return new Float32Array(vertices);
-}
+};
 
 export {
-  convertCoordinates,
+  calculateNativePosition,
   calculateClientMousePosition,
   calculateRealMousePosition,
   generateSquareVertices,
   generateRectangleVertices,
-  generateLineVertices
+  generateLineVertices,
 };

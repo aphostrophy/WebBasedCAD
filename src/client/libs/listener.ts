@@ -1,27 +1,68 @@
 import AppState from '../entity/AppState';
-import { glUtils } from '../libs/glUtils';
-import { calculateClientMousePosition } from '../libs/math';
+import { calculateClientMousePosition, calculateRealMousePosition } from '../libs/math';
+import { resizer } from '../libs/resizer';
+import { DrawableType, Position } from '../typings';
 
-let canvas = document.querySelector('canvas');
-if (!canvas) {
-  throw new Error('Canvas not found!');
-}
-const gl = glUtils.checkWebGL(canvas);
-
-const posX = document.querySelector('.mouse-pos-x') as HTMLSpanElement;
-const posY = document.querySelector('.mouse-pos-y') as HTMLSpanElement;
+const indexToShape: DrawableType[] = ['LINE', 'SQUARE', 'RECTANGLE', 'POLYGON'];
 
 const setupListeners = (appState: AppState) => {
-  canvas = canvas as HTMLCanvasElement;
-  canvas.addEventListener('mousemove', trackCanvasMousePosition);
+  const domHandler = appState.getDOMHandler();
+
+  domHandler.window.addEventListener('resize', () =>
+    resizer(domHandler.canvas, domHandler.getGl())
+  );
+
+  domHandler.window.addEventListener('keydown', (ev: KeyboardEvent) =>
+    handleKeyboardPress(ev, appState)
+  );
+
+  domHandler.canvas.addEventListener('mousemove', (ev: MouseEvent) =>
+    trackCanvasMousePosition(ev, appState)
+  );
+  domHandler.canvas.addEventListener('click', (ev: MouseEvent) =>
+    handleCanvasClickEvent(ev, appState)
+  );
+
+  domHandler.menuPicker.addEventListener('change', (ev: Event) =>
+    handleSelectShapeOptionChange(ev, appState)
+  );
 };
 
-const trackCanvasMousePosition = (e: MouseEvent): void => {
-  const { x, y } = calculateClientMousePosition(e);
-  posX.innerHTML = x.toString();
-  posY.innerHTML = y.toString();
+const trackCanvasMousePosition = (e: MouseEvent, appState: AppState): void => {
+  const clientPosition = calculateClientMousePosition(e);
+  const realPosition = calculateRealMousePosition(e);
+  appState.setMousePosition(clientPosition, realPosition);
 };
 
-const handleCanvasClickEvent = (e: MouseEvent, appState: AppState): void => {};
+const handleCanvasClickEvent = (e: MouseEvent, appState: AppState): void => {
+  const mode = appState.getAppStateMode();
+  const realPos = calculateRealMousePosition(e);
 
-export { setupListeners, trackCanvasMousePosition };
+  if (mode === 'DRAWING') {
+    appState.addVertex(realPos);
+  }
+};
+
+const handleKeyboardPress = (ev: KeyboardEvent, appState: AppState): void => {
+  const mode = appState.getAppStateMode();
+  if (ev.key === 'q') {
+    if (mode !== 'IDLE') {
+      appState.setIdle();
+    } else {
+      appState.setDrawing();
+    }
+  }
+
+  if (ev.key === 'Enter') {
+    appState.submitDrawing();
+  }
+};
+
+const handleSelectShapeOptionChange = (ev: Event, appState: AppState) => {
+  const target = ev.target;
+  if (target instanceof HTMLSelectElement) {
+    appState.setDrawShape(indexToShape[target.selectedIndex]);
+  }
+};
+
+export { setupListeners };
