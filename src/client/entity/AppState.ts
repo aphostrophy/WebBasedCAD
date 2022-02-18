@@ -79,6 +79,8 @@ class AppState {
     const gl = this.gl;
     (this.domHandler.canvas as HTMLCanvasElement).width = window.innerWidth;
     (this.domHandler.canvas as HTMLCanvasElement).height = window.innerHeight;
+    gl.clearColor(1.0, 1.0, 1.0, 1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
   }
 
@@ -125,9 +127,18 @@ class AppState {
 
   public addVertex(realPos: Position) {
     this.pendingVertices.push(realPos);
+
+    if (this.shape !== 'POLYGON' && this.pendingVertices.length == 2) {
+      this.submitDrawing();
+    }
   }
 
   public submitDrawing() {
+    if (this.pendingVertices.length < 2) {
+      alert('not enough vertices!');
+      return;
+    }
+
     if (this.shape === 'RECTANGLE') {
       if (this.pendingVertices.length == 2) {
         const coordinates = generateRectangleVertices(
@@ -159,6 +170,13 @@ class AppState {
   public setDrawShape(shape: DrawableType) {
     this.shape = shape;
     this.domHandler.setDrawShape(shape);
+  }
+
+  public resetCanvas() {
+    this.gl.clearColor(1.0, 1.0, 1.0, 1.0);
+    this.gl.clear(this.gl.COLOR_BUFFER_BIT);
+    this.drawables = [];
+    this.pendingVertices = [];
   }
 }
 
