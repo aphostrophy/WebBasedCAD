@@ -53,6 +53,10 @@ const handleKeyboardPress = (ev: KeyboardEvent, appState: AppState): void => {
     }
   }
 
+  if (ev.key === 'r') {
+    appState.resetCanvas();
+  }
+
   if (ev.key === 'Enter') {
     appState.submitDrawing();
   }
