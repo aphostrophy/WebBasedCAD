@@ -1,5 +1,5 @@
 import { glUtils } from '../libs/glUtils';
-import { AppStateMode, DrawableType, Position, Vec4 } from '../typings';
+import { AppStateMode, DrawableType, Position } from '../typings';
 
 const canvas = document.querySelector('canvas') as HTMLCanvasElement;
 

@@ -2,13 +2,12 @@ import { Drawable } from './entities';
 import DOMHandler from './DOMHandler';
 import { glUtils } from '../libs/glUtils';
 import { setupListeners } from '../libs/listener';
-import { AppStateMode, DrawableType, NativePosition, Position, Vec4 } from '../typings';
+import { AppStateMode, DrawableType, Position, Vec4 } from '../typings';
 import FragmentShaderSource from '../shaders/FragmentShader.glsl';
 import VertexShaderSource from '../shaders/VertexShader.glsl';
 import {
   generateSquareVertices,
   generateRectangleVertices,
-  calculateNativePosition,
   generateLineVertices,
 } from '../libs/math';
 

@@ -1,7 +1,7 @@
 import AppState from '../entity/AppState';
 import { calculateClientMousePosition, calculateRealMousePosition } from '../libs/math';
 import { resizer } from '../libs/resizer';
-import { DrawableType, Position, Vec4 } from '../typings';
+import { DrawableType } from '../typings';
 
 const indexToShape: DrawableType[] = ['LINE', 'SQUARE', 'RECTANGLE', 'POLYGON'];
 
