@@ -1,7 +1,7 @@
 import AppState from '../entity/AppState';
 import { calculateClientMousePosition, calculateRealMousePosition } from '../libs/math';
 import { resizer } from '../libs/resizer';
-import { DrawableType, Position } from '../typings';
+import { DrawableType, Position, Vec4 } from '../typings';
 
 const indexToShape: DrawableType[] = ['LINE', 'SQUARE', 'RECTANGLE', 'POLYGON'];
 
@@ -23,8 +23,12 @@ const setupListeners = (appState: AppState) => {
     handleCanvasClickEvent(ev, appState)
   );
 
-  domHandler.menuPicker.addEventListener('change', (ev: Event) =>
+  domHandler.shapePicker.addEventListener('change', (ev: Event) =>
     handleSelectShapeOptionChange(ev, appState)
+  );
+
+  domHandler.colorPicker.addEventListener('change', (ev: Event) =>
+    handleSelectColorOptionChange(ev, appState)
   );
 };
 
@@ -62,10 +66,18 @@ const handleKeyboardPress = (ev: KeyboardEvent, appState: AppState): void => {
   }
 };
 
-const handleSelectShapeOptionChange = (ev: Event, appState: AppState) => {
+const handleSelectShapeOptionChange = (ev: Event, appState: AppState): void => {
   const target = ev.target;
   if (target instanceof HTMLSelectElement) {
     appState.setDrawShape(indexToShape[target.selectedIndex]);
+  }
+};
+
+const handleSelectColorOptionChange = (ev: Event, appState: AppState): void => {
+  const target = ev.target;
+  if (target instanceof HTMLInputElement) {
+    const colorHex = target.value;
+    appState.setColor(colorHex);
   }
 };
 

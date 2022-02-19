@@ -2,7 +2,7 @@ import { Drawable } from './entities';
 import DOMHandler from './DOMHandler';
 import { glUtils } from '../libs/glUtils';
 import { setupListeners } from '../libs/listener';
-import { AppStateMode, DrawableType, NativePosition, Position } from '../typings';
+import { AppStateMode, DrawableType, NativePosition, Position, Vec4 } from '../typings';
 import FragmentShaderSource from '../shaders/FragmentShader.glsl';
 import VertexShaderSource from '../shaders/VertexShader.glsl';
 import {
@@ -15,6 +15,7 @@ import {
 class AppState {
   private mode: AppStateMode = 'IDLE';
   private shape: DrawableType = 'LINE';
+  private colorVector: Vec4 = [0.0, 0.0, 0.0, 1.0];
   private gl: WebGLRenderingContext;
   private drawables: Drawable[];
   private vertexShader: WebGLShader;
@@ -43,36 +44,11 @@ class AppState {
   private initDebugger() {
     this.domHandler.setAppStateMode(this.mode);
     this.domHandler.setDrawShape(this.shape);
+    this.domHandler.setColor('#000000');
   }
 
   public run() {
-    const program = this.program;
-
     this.setupCanvas();
-
-    const coordinates = generateRectangleVertices({ x: 100, y: 200 }, { x: 300, y: 800 });
-    const rectangle = new Drawable(
-      this.gl,
-      program,
-      this.gl.TRIANGLES,
-      [0.0, 0.3, 0.0, 1.0],
-      coordinates
-    );
-    this.addDrawable(rectangle);
-
-    const coordinates2 = generateRectangleVertices({ x: 200, y: 300 }, { x: 400, y: 500 });
-    const rectangle2 = new Drawable(
-      this.gl,
-      program,
-      this.gl.TRIANGLES,
-      [0.5, 0.3, 0.0, 1.0],
-      coordinates2
-    );
-    this.addDrawable(rectangle2);
-
-    const coordinates3 = generateLineVertices({ x: 0, y: 0 }, { x: 500, y: 600 });
-    const line = new Drawable(this.gl, program, this.gl.LINES, [0.5, 0.3, 0.0, 1.0], coordinates3);
-    this.addDrawable(line);
 
     requestAnimationFrame(this.render.bind(this));
   }
@@ -106,7 +82,7 @@ class AppState {
         this.gl,
         this.program,
         this.gl.LINES,
-        [0.5, 0.3, 0.0, 1.0],
+        this.colorVector,
         helperLineCoordinates
       );
       helperLine.draw();
@@ -143,6 +119,19 @@ class AppState {
     this.realMousePosition = { x: realX, y: realY };
   }
 
+  public setColor(colorHex: string) {
+    const colorStringArray = (colorHex.slice(1, colorHex.length).match(/.{2}/g) || []).concat([
+      'ff',
+    ]);
+    const colorVector: Vec4 = [0, 0, 0, 0];
+
+    for (let i = 0; i < colorStringArray.length; i++) {
+      colorVector[i] = parseInt(colorStringArray[i], 16) / 255;
+    }
+    this.colorVector = colorVector;
+    this.domHandler.setColor(colorHex);
+  }
+
   public addVertex(realPos: Position) {
     this.pendingVertices.push(realPos);
 
@@ -163,7 +152,7 @@ class AppState {
         this.gl,
         this.program,
         this.gl.LINES,
-        [0.0, 0.3, 0.0, 1.0],
+        this.colorVector,
         coordinates
       );
       this.addDrawable(line);
@@ -181,7 +170,7 @@ class AppState {
         this.gl,
         this.program,
         this.gl.TRIANGLES,
-        [0.0, 0.3, 0.0, 1.0],
+        this.colorVector,
         coordinates
       );
       this.addDrawable(square);
@@ -196,7 +185,7 @@ class AppState {
         this.gl,
         this.program,
         this.gl.TRIANGLES,
-        [0.0, 0.3, 0.0, 1.0],
+        this.colorVector,
         coordinates
       );
       this.addDrawable(rectangle);

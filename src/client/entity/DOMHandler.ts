@@ -1,5 +1,5 @@
 import { glUtils } from '../libs/glUtils';
-import { AppStateMode, DrawableType, Position } from '../typings';
+import { AppStateMode, DrawableType, Position, Vec4 } from '../typings';
 
 const canvas = document.querySelector('canvas') as HTMLCanvasElement;
 
@@ -10,7 +10,9 @@ const appStateMode = document.querySelector('.app-state-mode') as HTMLSpanElemen
 
 const drawShape = document.querySelector('.draw-shape') as HTMLSpanElement;
 
-const menuPicker = document.querySelector('#menushape') as HTMLSelectElement;
+const shapePicker = document.querySelector('#menushape') as HTMLSelectElement;
+
+const colorPicker = document.querySelector('#shape-color') as HTMLInputElement;
 
 class DOMHandler {
   public window: Window & typeof globalThis;
@@ -19,7 +21,8 @@ class DOMHandler {
   public clientX: HTMLSpanElement;
   public clientY: HTMLSpanElement;
   public appStateMode: HTMLSpanElement;
-  public menuPicker: HTMLSelectElement;
+  public shapePicker: HTMLSelectElement;
+  public colorPicker: HTMLInputElement;
   public drawShape: HTMLSpanElement;
 
   constructor() {
@@ -29,7 +32,8 @@ class DOMHandler {
     this.window = window;
     this.document = document;
     this.appStateMode = appStateMode;
-    this.menuPicker = menuPicker;
+    this.shapePicker = shapePicker;
+    this.colorPicker = colorPicker;
 
     this.drawShape = drawShape;
   }
@@ -50,6 +54,10 @@ class DOMHandler {
 
   public setDrawShape(shape: DrawableType) {
     this.drawShape.innerHTML = shape;
+  }
+
+  public setColor(color: string) {
+    this.colorPicker.value = color;
   }
 }
 

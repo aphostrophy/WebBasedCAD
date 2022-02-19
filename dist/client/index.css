@@ -73,3 +73,14 @@ div.right {
   font-size: 0.875rem;
   margin-bottom: 1rem;
 }
+
+.color-picker-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+#shape-color {
+  width: 80%;
+}
