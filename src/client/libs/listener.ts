@@ -64,6 +64,10 @@ const handleKeyboardPress = (ev: KeyboardEvent, appState: AppState): void => {
   if (ev.key === 'Enter') {
     appState.submitDrawing();
   }
+
+  if (ev.key === 'Escape') {
+    appState.clearPendingVertices();
+  }
 };
 
 const handleSelectShapeOptionChange = (ev: Event, appState: AppState): void => {
