@@ -157,23 +157,49 @@ class AppState {
       return;
     }
 
+    if (this.shape === 'LINE') {
+      const coordinates = generateLineVertices(this.pendingVertices[0], this.pendingVertices[1]);
+      const line = new Drawable(
+        this.gl,
+        this.program,
+        this.gl.LINES,
+        [0.0, 0.3, 0.0, 1.0],
+        coordinates
+      );
+      this.addDrawable(line);
+    }
+
+    if (this.shape === 'SQUARE') {
+      const firstPoint = this.pendingVertices[0];
+      const coordinates = generateSquareVertices(
+        firstPoint,
+        this.realMousePosition.x - firstPoint.x,
+        this.realMousePosition.y - firstPoint.y
+      );
+
+      const square = new Drawable(
+        this.gl,
+        this.program,
+        this.gl.TRIANGLES,
+        [0.0, 0.3, 0.0, 1.0],
+        coordinates
+      );
+      this.addDrawable(square);
+    }
+
     if (this.shape === 'RECTANGLE') {
-      if (this.pendingVertices.length == 2) {
-        const coordinates = generateRectangleVertices(
-          this.pendingVertices[0],
-          this.pendingVertices[1]
-        );
-        const rectangle = new Drawable(
-          this.gl,
-          this.program,
-          this.gl.TRIANGLES,
-          [0.0, 0.3, 0.0, 1.0],
-          coordinates
-        );
-        this.addDrawable(rectangle);
-      } else {
-        alert('Incorrect amount of vertices for a rectangle!');
-      }
+      const coordinates = generateRectangleVertices(
+        this.pendingVertices[0],
+        this.pendingVertices[1]
+      );
+      const rectangle = new Drawable(
+        this.gl,
+        this.program,
+        this.gl.TRIANGLES,
+        [0.0, 0.3, 0.0, 1.0],
+        coordinates
+      );
+      this.addDrawable(rectangle);
     }
   }
 

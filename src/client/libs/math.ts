@@ -43,24 +43,43 @@ const calculateRealMousePosition = (e: MouseEvent) => {
   };
 };
 
-const generateSquareVertices = (topLeftPoint: Position, size: number) => {
+const generateSquareVertices = (
+  startPoint: Position,
+  pseudoSignedWidthVector: number,
+  pseudoSignedHeightVector: number
+) => {
   const vertices = new Array<number>();
 
-  const firstTriangleA = convertCoordinates(topLeftPoint.x, topLeftPoint.y);
-  const firstTriangleB = convertCoordinates(topLeftPoint.x, topLeftPoint.y + size);
-  const firstTriangleC = convertCoordinates(topLeftPoint.x + size, topLeftPoint.y + size);
+  const xSign = Math.abs(pseudoSignedWidthVector) / pseudoSignedWidthVector;
+  const ySign = Math.abs(pseudoSignedHeightVector) / pseudoSignedHeightVector;
 
-  const secondTriangleA = convertCoordinates(topLeftPoint.x, topLeftPoint.y);
-  const secondTriangleB = convertCoordinates(topLeftPoint.x + size, topLeftPoint.y);
-  const secondTriangleC = convertCoordinates(topLeftPoint.x + size, topLeftPoint.y + size);
+  const dominantVectorLength = Math.max(
+    Math.abs(pseudoSignedHeightVector),
+    Math.abs(pseudoSignedWidthVector)
+  );
+
+  const topLeftPoint = convertCoordinates(startPoint.x, startPoint.y);
+  const bottomLeftPoint = convertCoordinates(
+    startPoint.x,
+    startPoint.y + dominantVectorLength * ySign
+  );
+  const topRightPoint = convertCoordinates(
+    startPoint.x + dominantVectorLength * xSign,
+    startPoint.y
+  );
+  const bottomRightPoint = convertCoordinates(
+    startPoint.x + dominantVectorLength * xSign,
+    startPoint.y + dominantVectorLength * ySign
+  );
 
   vertices.push(
-    ...firstTriangleA,
-    ...firstTriangleB,
-    ...firstTriangleC,
-    ...secondTriangleA,
-    ...secondTriangleB,
-    ...secondTriangleC
+    ...topLeftPoint,
+    ...bottomLeftPoint,
+    ...bottomRightPoint,
+
+    ...bottomRightPoint,
+    ...topRightPoint,
+    ...topLeftPoint
   );
 
   return vertices;
