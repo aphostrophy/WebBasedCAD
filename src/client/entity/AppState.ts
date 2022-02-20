@@ -168,7 +168,7 @@ class AppState {
       const square = new Drawable(
         this.gl,
         this.program,
-        this.gl.TRIANGLES,
+        this.gl.TRIANGLE_FAN,
         this.colorVector,
         coordinates
       );
@@ -183,7 +183,7 @@ class AppState {
       const rectangle = new Drawable(
         this.gl,
         this.program,
-        this.gl.TRIANGLES,
+        this.gl.TRIANGLE_FAN,
         this.colorVector,
         coordinates
       );
