@@ -72,15 +72,7 @@ const generateSquareVertices = (
     startPoint.y + dominantVectorLength * ySign
   );
 
-  vertices.push(
-    ...topLeftPoint,
-    ...bottomLeftPoint,
-    ...bottomRightPoint,
-
-    ...bottomRightPoint,
-    ...topRightPoint,
-    ...topLeftPoint
-  );
+  vertices.push(...topLeftPoint, ...topRightPoint, ...bottomRightPoint, ...bottomLeftPoint);
 
   return vertices;
 };
@@ -88,22 +80,12 @@ const generateSquareVertices = (
 const generateRectangleVertices = (topLeftPoint: Position, bottomRightPoint: Position) => {
   const vertices = new Array<number>();
 
-  const firstTriangleA = convertCoordinates(topLeftPoint.x, topLeftPoint.y);
-  const firstTriangleB = convertCoordinates(topLeftPoint.x, bottomRightPoint.y);
-  const firstTriangleC = convertCoordinates(bottomRightPoint.x, bottomRightPoint.y);
+  const verticeA = convertCoordinates(topLeftPoint.x, topLeftPoint.y);
+  const verticeB = convertCoordinates(bottomRightPoint.x, topLeftPoint.y);
+  const verticeC = convertCoordinates(bottomRightPoint.x, bottomRightPoint.y);
+  const verticeD = convertCoordinates(topLeftPoint.x, bottomRightPoint.y);
 
-  const secondTriangleA = convertCoordinates(bottomRightPoint.x, bottomRightPoint.y);
-  const secondTriangleB = convertCoordinates(bottomRightPoint.x, topLeftPoint.y);
-  const secondTriangleC = convertCoordinates(topLeftPoint.x, topLeftPoint.y);
-
-  vertices.push(
-    ...firstTriangleA,
-    ...firstTriangleB,
-    ...firstTriangleC,
-    ...secondTriangleA,
-    ...secondTriangleB,
-    ...secondTriangleC
-  );
+  vertices.push(...verticeA, ...verticeB, ...verticeC, ...verticeD);
 
   return vertices;
 };
