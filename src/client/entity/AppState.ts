@@ -9,6 +9,7 @@ import {
   generateSquareVertices,
   generateRectangleVertices,
   generateLineVertices,
+  generatePolygonVertices,
 } from '../libs/math';
 
 class AppState {
@@ -90,7 +91,11 @@ class AppState {
 
   private addDrawable(drawable: Drawable) {
     this.drawables.push(drawable);
-    this.clearPendingVertices();
+    if (this.shape !== 'POLYGON') {
+      this.clearPendingVertices();
+    } else {
+      
+    }
   }
 
   public getAppStateMode() {
@@ -135,6 +140,10 @@ class AppState {
     this.pendingVertices.push(realPos);
 
     if (this.shape !== 'POLYGON' && this.pendingVertices.length == 2) {
+      this.submitDrawing();
+    }
+
+    if (this.shape === 'POLYGON' && this.pendingVertices.length >= 3) {
       this.submitDrawing();
     }
   }
@@ -188,6 +197,18 @@ class AppState {
         coordinates
       );
       this.addDrawable(rectangle);
+    }
+
+    if (this.shape === 'POLYGON') {
+      const coordinates = generatePolygonVertices(this.pendingVertices);
+      const polygon = new Drawable(
+        this.gl,
+        this.program,
+        this.gl.TRIANGLE_FAN,
+        this.colorVector,
+        coordinates
+      );
+      this.addDrawable(polygon);
     }
   }
 

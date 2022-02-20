@@ -119,6 +119,18 @@ const generateLineVertices = (firstPoint: Position, secondPoint: Position) => {
   return vertices;
 };
 
+const generatePolygonVertices = (poligonVertices: Array<Position>) => {
+  const vertices = new Array<number>();
+
+  var currentElement;
+  for (let i = 0; i < poligonVertices.length; i++) {
+    currentElement = convertCoordinates(poligonVertices[i].x, poligonVertices[i].y);
+    vertices.push(...currentElement);
+  }
+
+  return vertices;
+}
+
 export {
   calculateNativePosition,
   calculateClientMousePosition,
@@ -126,4 +138,5 @@ export {
   generateSquareVertices,
   generateRectangleVertices,
   generateLineVertices,
+  generatePolygonVertices
 };
