@@ -93,9 +93,7 @@ class AppState {
     this.drawables.push(drawable);
     if (this.shape !== 'POLYGON') {
       this.clearPendingVertices();
-    } else {
-      
-    }
+    } 
   }
 
   public getAppStateMode() {
