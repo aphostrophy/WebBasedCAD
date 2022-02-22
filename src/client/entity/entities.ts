@@ -4,9 +4,13 @@ import { ITEM_SIZE } from '../libs/constant';
 class Drawable {
   private gl: WebGLRenderingContext;
   private program: WebGLProgram;
+
+  /** Drawable Primitives */
   public vertices: NativePosition[];
   public type: number;
   public colorVector: Vec4;
+  /** End of Drawable Primitives */
+
   public anchorPoint: Vec2;
 
   constructor(

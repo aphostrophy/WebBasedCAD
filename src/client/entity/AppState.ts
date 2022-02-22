@@ -1,8 +1,9 @@
 import { Drawable } from './entities';
+import FileManager from './FileManager';
 import DOMHandler from './DOMHandler';
 import { glUtils } from '../libs/glUtils';
 import { setupListeners } from '../libs/listener';
-import { AppStateMode, DrawableType, Position, Vec4 } from '../typings';
+import { AppStateMode, DrawablePrimitives, DrawableType, Position, Vec4 } from '../typings';
 import FragmentShaderSource from '../shaders/FragmentShader.glsl';
 import VertexShaderSource from '../shaders/VertexShader.glsl';
 import {
@@ -18,6 +19,7 @@ class AppState {
   private colorVector: Vec4 = [0.0, 0.0, 0.0, 1.0];
   private gl: WebGLRenderingContext;
   private drawables: Drawable[];
+  private fileManager: FileManager;
   private vertexShader: WebGLShader;
   private fragmentShader: WebGLShader;
   private program: WebGLProgram;
@@ -32,6 +34,8 @@ class AppState {
     this.gl = this.domHandler.getGl();
 
     this.drawables = [];
+    this.fileManager = new FileManager();
+
     this.vertexShader = glUtils.getShader(this.gl, this.gl.VERTEX_SHADER, VertexShaderSource);
     this.fragmentShader = glUtils.getShader(this.gl, this.gl.FRAGMENT_SHADER, FragmentShaderSource);
     this.program = glUtils.createProgram(this.gl, this.vertexShader, this.fragmentShader);
@@ -74,7 +78,6 @@ class AppState {
     }
 
     if (this.pendingVertices.length > 0) {
-      
       for (let i = 0; i < this.pendingVertices.length; i++) {
         if (i == this.pendingVertices.length - 1) {
           const helperLineCoordinates = generateLineVertices(
@@ -92,7 +95,7 @@ class AppState {
         } else {
           const helperLineCoordinates = generateLineVertices(
             this.pendingVertices[i],
-            this.pendingVertices[i+1]
+            this.pendingVertices[i + 1]
           );
           const helperLine = new Drawable(
             this.gl,
@@ -103,9 +106,7 @@ class AppState {
           );
           helperLine.draw();
         }
-        
       }
-
     }
   }
 
@@ -246,6 +247,51 @@ class AppState {
     this.gl.clear(this.gl.COLOR_BUFFER_BIT);
     this.drawables = [];
     this.pendingVertices = [];
+  }
+
+  /**
+   * Save and Load File Handling
+   */
+
+  public getDrawablesPrimitives(): DrawablePrimitives[] {
+    const data: DrawablePrimitives[] = [];
+
+    for (const drawable of this.drawables) {
+      const drawableData: DrawablePrimitives = {
+        vertices: drawable.vertices,
+        colorVector: drawable.colorVector,
+        type: drawable.type,
+      };
+      data.push(drawableData);
+    }
+
+    return data;
+  }
+
+  public save() {
+    this.fileManager.saveAppState(this);
+  }
+
+  public load() {
+    this.fileManager.loadAppState(this);
+  }
+
+  public populateDrawables(drawablesPrimitives: DrawablePrimitives[]) {
+    for (const drawablePrimitive of drawablesPrimitives) {
+      const vertices: number[] = [];
+      for (const vertex of drawablePrimitive.vertices) {
+        vertices.push(vertex.x);
+        vertices.push(vertex.y);
+      }
+      const drawable = new Drawable(
+        this.gl,
+        this.program,
+        drawablePrimitive.type,
+        drawablePrimitive.colorVector,
+        vertices
+      );
+      this.addDrawable(drawable);
+    }
   }
 }
 
