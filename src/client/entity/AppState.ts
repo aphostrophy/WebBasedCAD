@@ -10,6 +10,9 @@ import {
   generateRectangleVertices,
   generateLineVertices,
   generatePolygonVertices,
+  insideSquare,
+  insidePolygon,
+  insideLine,
 } from '../libs/math';
 
 class AppState {
@@ -22,6 +25,7 @@ class AppState {
   private fragmentShader: WebGLShader;
   private program: WebGLProgram;
   private domHandler: DOMHandler;
+  private selectedIndex: number;
 
   private realMousePosition: Position;
 
@@ -37,6 +41,7 @@ class AppState {
     this.program = glUtils.createProgram(this.gl, this.vertexShader, this.fragmentShader);
     this.pendingVertices = [];
     this.realMousePosition = { x: 0, y: 0 };
+    this.selectedIndex = -1;
     this.initDebugger();
     setupListeners(this);
   }
@@ -68,13 +73,19 @@ class AppState {
   }
 
   private draw() {
+    // draw shapes
     for (let i = 0; i < this.drawables.length; i++) {
       const drawable = this.drawables[i];
       drawable.draw();
     }
 
+    //draw points on selected shape
+    if (this.selectedIndex != -1) {
+      this.drawables[this.selectedIndex].drawVertices();
+    }
+
+    //draw helper line for pending shape
     if (this.pendingVertices.length > 0) {
-      
       for (let i = 0; i < this.pendingVertices.length; i++) {
         if (i == this.pendingVertices.length - 1) {
           const helperLineCoordinates = generateLineVertices(
@@ -86,26 +97,26 @@ class AppState {
             this.program,
             this.gl.LINES,
             this.colorVector,
-            helperLineCoordinates
+            helperLineCoordinates,
+            'LINE'
           );
           helperLine.draw();
         } else {
           const helperLineCoordinates = generateLineVertices(
             this.pendingVertices[i],
-            this.pendingVertices[i+1]
+            this.pendingVertices[i + 1]
           );
           const helperLine = new Drawable(
             this.gl,
             this.program,
             this.gl.LINES,
             this.colorVector,
-            helperLineCoordinates
+            helperLineCoordinates,
+            'LINE'
           );
           helperLine.draw();
         }
-        
       }
-
     }
   }
 
@@ -122,12 +133,20 @@ class AppState {
     this.mode = 'IDLE';
 
     this.pendingVertices = [];
+    this.selectedIndex = -1;
     this.domHandler.setAppStateMode(this.mode);
   }
 
   public setDrawing() {
     this.mode = 'DRAWING';
 
+    this.domHandler.setAppStateMode(this.mode);
+  }
+
+  public setSelecting() {
+    this.mode = 'SELECTING';
+
+    this.pendingVertices = [];
     this.domHandler.setAppStateMode(this.mode);
   }
 
@@ -177,7 +196,8 @@ class AppState {
         this.program,
         this.gl.LINES,
         this.colorVector,
-        coordinates
+        coordinates,
+        'LINE'
       );
       this.addDrawable(line);
     }
@@ -195,7 +215,8 @@ class AppState {
         this.program,
         this.gl.TRIANGLE_FAN,
         this.colorVector,
-        coordinates
+        coordinates,
+        'SQUARE'
       );
       this.addDrawable(square);
     }
@@ -210,7 +231,8 @@ class AppState {
         this.program,
         this.gl.TRIANGLE_FAN,
         this.colorVector,
-        coordinates
+        coordinates,
+        'RECTANGLE'
       );
       this.addDrawable(rectangle);
     }
@@ -222,7 +244,8 @@ class AppState {
         this.program,
         this.gl.TRIANGLE_FAN,
         this.colorVector,
-        coordinates
+        coordinates,
+        'POLYGON'
       );
       this.addDrawable(polygon);
     }
@@ -246,6 +269,40 @@ class AppState {
     this.gl.clear(this.gl.COLOR_BUFFER_BIT);
     this.drawables = [];
     this.pendingVertices = [];
+  }
+
+  public selectShape(pos: Position) {
+    var inside = false;
+
+    for (let i = this.drawables.length - 1; i >= 0; i--) {
+      var drawable = this.drawables[i];
+      if (drawable.shape == 'LINE') {
+        if (insideLine(drawable.vertices, pos)) {
+          this.selectedIndex = i;
+          inside = true;
+          console.log('DI DALAM GARIS');
+          break;
+        }
+      } else if (drawable.shape == 'SQUARE' || drawable.shape == 'RECTANGLE') {
+        if (insideSquare(drawable.vertices, pos)) {
+          this.selectedIndex = i;
+          inside = true;
+          console.log('DI DALAM PERSEGI');
+          break;
+        }
+      } else {
+        if (insidePolygon(drawable.vertices, drawable.anchorPoint, pos)) {
+          this.selectedIndex = i;
+          inside = true;
+          console.log('DI DALAM POLYGON');
+          break;
+        }
+      }
+    }
+
+    if (!inside) {
+      this.selectedIndex = -1;
+    }
   }
 }
 

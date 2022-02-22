@@ -1,4 +1,4 @@
-import { Position } from '../typings';
+import { Position, Vec2 } from '../typings';
 
 let canvas = document.querySelector('canvas') as HTMLCanvasElement;
 
@@ -111,7 +111,57 @@ const generatePolygonVertices = (poligonVertices: Array<Position>) => {
   }
 
   return vertices;
-}
+};
+
+const calculateDistance = (x1: number, y1: number, x2: number, y2: number) => {
+  const xDiff = x1 - x2;
+  const yDiff = y1 - y2;
+
+  return Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
+};
+
+const yCoordinateinLine = (x: number, vertices: Array<Position>) => {
+  const x1 = vertices[0].x;
+  const x2 = vertices[1].x;
+  const y1 = vertices[0].y;
+  const y2 = vertices[1].y;
+
+  // (y-y1)/(y2-y1) = (x-x1)/(x2-x1)
+  return ((x - x1) / (x2 - x1)) * (y2 - y1) + y1;
+};
+
+const insideLine = (vertices: Array<Position>, position: Position) => {
+  // Lom diimplementasiin
+  const [x, y] = convertCoordinates(position.x, position.y);
+  const failCondition1 =
+    x < Math.min(vertices[0].x, vertices[1].x) || x > Math.max(vertices[0].x, vertices[1].x);
+  const failCondition2 =
+    y < Math.min(vertices[0].y, vertices[1].y) || y > Math.max(vertices[0].y, vertices[1].y);
+
+  if (!failCondition1 && !failCondition2) {
+    return Math.abs(yCoordinateinLine(x, vertices) - y) < 0.05;
+  }
+  return false;
+};
+
+const insideSquare = (vertices: Array<Position>, position: Position) => {
+  const [x, y] = convertCoordinates(position.x, position.y);
+
+  const req1 = x >= Math.min(vertices[0].x, vertices[1].x, vertices[2].x, vertices[3].x);
+  const req2 = x <= Math.max(vertices[0].x, vertices[1].x, vertices[2].x, vertices[3].x);
+  const req3 = y >= Math.min(vertices[0].y, vertices[1].y, vertices[2].y, vertices[3].y);
+  const req4 = y <= Math.max(vertices[0].y, vertices[1].y, vertices[2].y, vertices[3].y);
+
+  return req1 && req2 && req3 && req4;
+};
+
+const insidePolygon = (vertices: Array<Position>, anchorPoint: Vec2, position: Position) => {
+  const [x, y] = convertCoordinates(position.x, position.y);
+  const distance = calculateDistance(x, y, anchorPoint[0], anchorPoint[1]);
+
+  console.log(distance);
+  return distance < 0.15;
+};
 
 export {
   calculateNativePosition,
@@ -120,5 +170,8 @@ export {
   generateSquareVertices,
   generateRectangleVertices,
   generateLineVertices,
-  generatePolygonVertices
+  generatePolygonVertices,
+  insideSquare,
+  insidePolygon,
+  insideLine,
 };

@@ -1,4 +1,4 @@
-import { NativePosition, Vec2, Vec4 } from '../typings';
+import { NativePosition, Position, Vec2, Vec4 } from '../typings';
 import { ITEM_SIZE } from '../libs/constant';
 
 class Drawable {
@@ -8,13 +8,15 @@ class Drawable {
   public type: number;
   public colorVector: Vec4;
   public anchorPoint: Vec2;
+  public shape: string;
 
   constructor(
     gl: WebGLRenderingContext,
     program: WebGLProgram,
     type: number,
     colorVector: Vec4,
-    vertices: number[]
+    vertices: number[],
+    shape: string
   ) {
     this.gl = gl;
     this.program = program;
@@ -25,6 +27,7 @@ class Drawable {
       this.vertices.push({ x: vertices[i], y: vertices[i + 1] });
     }
     this.anchorPoint = this.calculateAnchorPoint();
+    this.shape = shape;
   }
 
   bindBuffer() {
@@ -49,6 +52,24 @@ class Drawable {
     const uColor = gl.getUniformLocation(program, 'uColor');
     gl.uniform4fv(uColor, this.colorVector);
     gl.drawArrays(this.type, 0, this.vertices.length);
+  }
+
+  drawVertices() {
+    console.log('DRAW VERTICES');
+    this.bindBuffer();
+    const gl = this.gl;
+    const program = this.program;
+    gl.useProgram(program);
+    const positionLocation = gl.getAttribLocation(program, 'position');
+    gl.enableVertexAttribArray(positionLocation);
+    gl.vertexAttribPointer(positionLocation, ITEM_SIZE, gl.FLOAT, false, 0, 0);
+    const uColor = gl.getUniformLocation(program, 'uColor');
+    if (this.colorVector != [255, 0, 0, 1]) {
+      gl.uniform4fv(uColor, [255, 0, 0, 1]);
+    } else {
+      gl.uniform4fv(uColor, [0, 0, 0, 1]);
+    }
+    gl.drawArrays(gl.POINTS, 0, this.vertices.length);
   }
 
   _flattenVertices(vertices: NativePosition[]) {

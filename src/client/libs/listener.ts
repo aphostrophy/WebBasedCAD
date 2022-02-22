@@ -53,15 +53,20 @@ const handleCanvasClickEvent = (e: MouseEvent, appState: AppState): void => {
   if (mode === 'DRAWING') {
     appState.addVertex(realPos);
   }
+  if (mode == 'SELECTING') {
+    appState.selectShape(realPos);
+  }
 };
 
 const handleKeyboardPress = (ev: KeyboardEvent, appState: AppState): void => {
   const mode = appState.getAppStateMode();
   if (ev.key === 'q') {
-    if (mode !== 'IDLE') {
-      appState.setIdle();
-    } else {
+    if (mode === 'IDLE') {
       appState.setDrawing();
+    } else if (mode == 'DRAWING') {
+      appState.setSelecting();
+    } else {
+      appState.setIdle();
     }
   }
 
