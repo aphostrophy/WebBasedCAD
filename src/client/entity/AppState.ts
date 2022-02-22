@@ -111,9 +111,7 @@ class AppState {
 
   private addDrawable(drawable: Drawable) {
     this.drawables.push(drawable);
-    if (this.shape !== 'POLYGON') {
-      this.clearPendingVertices();
-    } 
+    this.clearPendingVertices();
   }
 
   public getAppStateMode() {
