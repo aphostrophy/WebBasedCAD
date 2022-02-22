@@ -30,6 +30,14 @@ const setupListeners = (appState: AppState) => {
   domHandler.colorPicker.addEventListener('change', (ev: Event) =>
     handleSelectColorOptionChange(ev, appState)
   );
+
+  domHandler.loadFileButton.addEventListener('click', (ev: MouseEvent) =>
+    handleLoadFile(ev, appState)
+  );
+
+  domHandler.saveFileButton.addEventListener('click', (ev: MouseEvent) =>
+    handleSaveFile(ev, appState)
+  );
 };
 
 const trackCanvasMousePosition = (e: MouseEvent, appState: AppState): void => {
@@ -83,6 +91,14 @@ const handleSelectColorOptionChange = (ev: Event, appState: AppState): void => {
     const colorHex = target.value;
     appState.setColor(colorHex);
   }
+};
+
+const handleLoadFile = (ev: MouseEvent, appState: AppState): void => {
+  console.log('LOAD FILE');
+};
+
+const handleSaveFile = (ev: MouseEvent, appState: AppState): void => {
+  console.log('SAVE FILE');
 };
 
 export { setupListeners };

@@ -14,6 +14,9 @@ const shapePicker = document.querySelector('#menushape') as HTMLSelectElement;
 
 const colorPicker = document.querySelector('#shape-color') as HTMLInputElement;
 
+const loadFileButton = document.querySelector('.load-file-button') as HTMLButtonElement;
+const saveFileButton = document.querySelector('.save-file-button') as HTMLButtonElement;
+
 class DOMHandler {
   public window: Window & typeof globalThis;
   public document: Document;
@@ -24,6 +27,8 @@ class DOMHandler {
   public shapePicker: HTMLSelectElement;
   public colorPicker: HTMLInputElement;
   public drawShape: HTMLSpanElement;
+  public loadFileButton: HTMLButtonElement;
+  public saveFileButton: HTMLButtonElement;
 
   constructor() {
     this.canvas = canvas;
@@ -36,6 +41,9 @@ class DOMHandler {
     this.colorPicker = colorPicker;
 
     this.drawShape = drawShape;
+
+    this.loadFileButton = loadFileButton;
+    this.saveFileButton = saveFileButton;
   }
 
   public getGl() {
