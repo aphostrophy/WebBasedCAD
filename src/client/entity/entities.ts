@@ -1,7 +1,7 @@
-import { NativePosition, Vec2, Vec4 } from '../typings';
+import { DrawablePrimitives, NativePosition, Vec2, Vec4 } from '../typings';
 import { ITEM_SIZE } from '../libs/constant';
 
-class Drawable {
+class Drawable implements DrawablePrimitives {
   private gl: WebGLRenderingContext;
   private program: WebGLProgram;
 
