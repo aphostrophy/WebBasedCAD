@@ -1,12 +1,16 @@
-import { NativePosition, Position, Vec2, Vec4 } from '../typings';
+import { DrawablePrimitives, NativePosition, Vec2, Vec4 } from '../typings';
 import { ITEM_SIZE } from '../libs/constant';
 
-class Drawable {
+class Drawable implements DrawablePrimitives {
   private gl: WebGLRenderingContext;
   private program: WebGLProgram;
+
+  /** Drawable Primitives */
   public vertices: NativePosition[];
   public type: number;
   public colorVector: Vec4;
+  /** End of Drawable Primitives */
+
   public anchorPoint: Vec2;
   public shape: string;
 

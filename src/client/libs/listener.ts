@@ -99,11 +99,11 @@ const handleSelectColorOptionChange = (ev: Event, appState: AppState): void => {
 };
 
 const handleLoadFile = (ev: MouseEvent, appState: AppState): void => {
-  console.log('LOAD FILE');
+  appState.load();
 };
 
 const handleSaveFile = (ev: MouseEvent, appState: AppState): void => {
-  console.log('SAVE FILE');
+  appState.save();
 };
 
 export { setupListeners };
