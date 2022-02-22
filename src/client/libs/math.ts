@@ -1,4 +1,4 @@
-import { Position } from '../typings';
+import { NativePosition, Position } from '../typings';
 
 let canvas = document.querySelector('canvas') as HTMLCanvasElement;
 
@@ -13,13 +13,23 @@ const convertCoordinates = (x: number, y: number) => {
   return [outputX, outputY];
 };
 
-const calculateNativePosition = (realPos: Position) => {
+const calculateNativePosition = (realPos: Position): NativePosition => {
   const { x: realX, y: realY } = realPos;
   const midX = (canvas.width - bound.left) / 2;
   const midY = (canvas.height - bound.top) / 2;
   return {
     x: (realX - midX) / midX,
     y: (midY - realY) / midY,
+  };
+};
+
+const convertNativeToRealPosition = (nativePos: NativePosition): Position => {
+  const { x: nativeX, y: nativeY } = nativePos;
+  const midX = (canvas.width - bound.left) / 2;
+  const midY = (canvas.height - bound.top) / 2;
+  return {
+    x: nativeX * midX + midX,
+    y: midY - nativeY * midY,
   };
 };
 
@@ -111,14 +121,15 @@ const generatePolygonVertices = (poligonVertices: Array<Position>) => {
   }
 
   return vertices;
-}
+};
 
 export {
   calculateNativePosition,
   calculateClientMousePosition,
   calculateRealMousePosition,
+  convertNativeToRealPosition,
   generateSquareVertices,
   generateRectangleVertices,
   generateLineVertices,
-  generatePolygonVertices
+  generatePolygonVertices,
 };
