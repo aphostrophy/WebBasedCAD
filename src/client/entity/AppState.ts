@@ -273,6 +273,7 @@ class AppState {
   }
 
   public load() {
+    this.resetCanvas();
     this.fileManager.loadAppState(this);
   }
 
