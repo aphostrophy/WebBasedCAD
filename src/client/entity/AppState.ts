@@ -74,18 +74,38 @@ class AppState {
     }
 
     if (this.pendingVertices.length > 0) {
-      const helperLineCoordinates = generateLineVertices(
-        this.pendingVertices[0],
-        this.realMousePosition
-      );
-      const helperLine = new Drawable(
-        this.gl,
-        this.program,
-        this.gl.LINES,
-        this.colorVector,
-        helperLineCoordinates
-      );
-      helperLine.draw();
+      
+      for (let i = 0; i < this.pendingVertices.length; i++) {
+        if (i == this.pendingVertices.length - 1) {
+          const helperLineCoordinates = generateLineVertices(
+            this.pendingVertices[i],
+            this.realMousePosition
+          );
+          const helperLine = new Drawable(
+            this.gl,
+            this.program,
+            this.gl.LINES,
+            this.colorVector,
+            helperLineCoordinates
+          );
+          helperLine.draw();
+        } else {
+          const helperLineCoordinates = generateLineVertices(
+            this.pendingVertices[i],
+            this.pendingVertices[i+1]
+          );
+          const helperLine = new Drawable(
+            this.gl,
+            this.program,
+            this.gl.LINES,
+            this.colorVector,
+            helperLineCoordinates
+          );
+          helperLine.draw();
+        }
+        
+      }
+
     }
   }
 
@@ -141,9 +161,9 @@ class AppState {
       this.submitDrawing();
     }
 
-    if (this.shape === 'POLYGON' && this.pendingVertices.length >= 3) {
-      this.submitDrawing();
-    }
+    // if (this.shape === 'POLYGON' && this.pendingVertices.length >= 3) {
+    //   this.submitDrawing();
+    // }
   }
 
   public submitDrawing() {
