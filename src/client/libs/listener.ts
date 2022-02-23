@@ -54,7 +54,22 @@ const handleCanvasClickEvent = (e: MouseEvent, appState: AppState): void => {
     appState.addVertex(realPos);
   }
   if (mode == 'SELECTING') {
-    appState.selectShape(realPos);
+    if (appState.noSelectedShape()) {
+      // If there is no selected shape
+      appState.selectShape(realPos);
+    } else {
+      // If there is a selected shape
+      if (appState.isMovingVertice()) {
+        appState.changeMovingVertice(-1);
+      } else {
+        const movingVerticeIndex = appState.positionOnVertice(realPos);
+        if (movingVerticeIndex != -1) {
+          appState.changeMovingVertice(movingVerticeIndex);
+        } else {
+          appState.selectShape(realPos);
+        }
+      }
+    }
   }
 };
 

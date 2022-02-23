@@ -203,6 +203,7 @@ export {
   calculateRealMousePosition,
   convertNativeToRealPosition,
   generateSquareVertices,
+  generateSquareVertices2,
   generateRectangleVertices,
   generateLineVertices,
   generatePolygonVertices,
