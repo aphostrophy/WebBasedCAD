@@ -14,6 +14,7 @@ import {
   insideSquare,
   insidePolygon,
   insideLine,
+  generatePointVertice,
 } from '../libs/math';
 
 class AppState {
@@ -85,7 +86,20 @@ class AppState {
 
     //draw points on selected shape
     if (this.selectedIndex != -1) {
-      this.drawables[this.selectedIndex].drawVertices();
+      // Draw square on each vertices
+      const selectedDrawable = this.drawables[this.selectedIndex];
+      for (var i = 0; i < selectedDrawable.vertices.length; i++) {
+        const coordinates = generatePointVertice(selectedDrawable.vertices[i]);
+        const tempSquare = new Drawable(
+          this.gl,
+          this.program,
+          this.gl.TRIANGLE_FAN,
+          this.colorVector,
+          coordinates,
+          'SQUARE'
+        );
+        tempSquare.drawVertices();
+      }
     }
 
     //draw helper line for pending shape

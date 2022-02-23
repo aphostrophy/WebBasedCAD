@@ -1,3 +1,4 @@
+import { diffieHellman } from 'crypto';
 import { NativePosition, Position, Vec2 } from '../typings';
 
 let canvas = document.querySelector('canvas') as HTMLCanvasElement;
@@ -87,6 +88,19 @@ const generateSquareVertices = (
   return vertices;
 };
 
+const generateSquareVertices2 = (startPoint: Position, length: number) => {
+  const vertices = new Array<number>();
+
+  const topLeftPoint = convertCoordinates(startPoint.x, startPoint.y);
+  const bottomLeftPoint = convertCoordinates(startPoint.x, startPoint.y + length);
+  const topRightPoint = convertCoordinates(startPoint.x + length, startPoint.y);
+  const bottomRightPoint = convertCoordinates(startPoint.x + length, startPoint.y + length);
+
+  vertices.push(...topLeftPoint, ...topRightPoint, ...bottomRightPoint, ...bottomLeftPoint);
+
+  return vertices;
+};
+
 const generateRectangleVertices = (topLeftPoint: Position, bottomRightPoint: Position) => {
   const vertices = new Array<number>();
 
@@ -169,8 +183,18 @@ const insidePolygon = (vertices: Array<Position>, anchorPoint: Vec2, position: P
   const [x, y] = convertCoordinates(position.x, position.y);
   const distance = calculateDistance(x, y, anchorPoint[0], anchorPoint[1]);
 
-  console.log(distance);
   return distance < 0.15;
+};
+
+// Generating square coordinates for a vertice
+const generatePointVertice = (vertices: Position) => {
+  const diff = 4;
+  const input = convertNativeToRealPosition(vertices);
+  input.x -= diff;
+  input.y -= diff;
+  const output = generateSquareVertices2(input, 2 * diff);
+
+  return output;
 };
 
 export {
@@ -185,4 +209,5 @@ export {
   insideSquare,
   insidePolygon,
   insideLine,
+  generatePointVertice,
 };

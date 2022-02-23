@@ -41,7 +41,7 @@ class Drawable implements DrawablePrimitives {
     gl.bufferData(
       gl.ARRAY_BUFFER,
       new Float32Array(this._flattenVertices(this.vertices)),
-      gl.DYNAMIC_DRAW
+      gl.STATIC_DRAW
     );
   }
 
@@ -59,7 +59,6 @@ class Drawable implements DrawablePrimitives {
   }
 
   drawVertices() {
-    console.log('DRAW VERTICES');
     this.bindBuffer();
     const gl = this.gl;
     const program = this.program;
@@ -73,7 +72,7 @@ class Drawable implements DrawablePrimitives {
     } else {
       gl.uniform4fv(uColor, [0, 0, 0, 1]);
     }
-    gl.drawArrays(gl.POINTS, 0, this.vertices.length);
+    gl.drawArrays(this.type, 0, this.vertices.length);
   }
 
   _flattenVertices(vertices: NativePosition[]) {
