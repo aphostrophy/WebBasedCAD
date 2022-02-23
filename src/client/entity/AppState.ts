@@ -293,6 +293,8 @@ class AppState {
     this.gl.clear(this.gl.COLOR_BUFFER_BIT);
     this.drawables = [];
     this.pendingVertices = [];
+    this.clearSelectedVertices();
+    this.changeMovingVertice(-1);
   }
 
   public addSelectedVertices() {
