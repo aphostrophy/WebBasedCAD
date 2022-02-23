@@ -83,57 +83,7 @@ class AppState {
 
   private draw() {
     // Changing the location of a vertice from a selected shape
-    if (this.movingVerticeIndex != -1) {
-      const selectedDrawable = this.drawables[this.selectedShapeIndex];
-      const nativePosition = calculateNativePosition(this.realMousePosition);
-
-      if (selectedDrawable.shape == 'LINE' || selectedDrawable.shape == 'POLYGON') {
-        selectedDrawable.vertices[this.movingVerticeIndex] = nativePosition;
-      } else {
-        const pairVerticeIndex =
-          this.movingVerticeIndex - 2 < 0
-            ? this.movingVerticeIndex + 2
-            : this.movingVerticeIndex - 2;
-        const pairVerticeLocation = convertNativeToRealPosition(
-          selectedDrawable.vertices[pairVerticeIndex]
-        );
-
-        if (selectedDrawable.shape == 'RECTANGLE') {
-          const coordinates = generateRectangleVertices(
-            this.realMousePosition,
-            pairVerticeLocation
-          );
-          const tempRectangle = new Drawable(
-            this.gl,
-            this.program,
-            this.gl.TRIANGLE_FAN,
-            this.colorVector,
-            coordinates,
-            'RECTANGLE'
-          );
-          this.changeMovingVertice(0);
-          selectedDrawable.vertices = tempRectangle.vertices;
-        } else {
-          const coordinates = generateSquareVertices(
-            this.realMousePosition,
-            pairVerticeLocation.x - this.realMousePosition.x,
-            pairVerticeLocation.y - this.realMousePosition.y
-          );
-          const tempSquare = new Drawable(
-            this.gl,
-            this.program,
-            this.gl.TRIANGLE_FAN,
-            this.colorVector,
-            coordinates,
-            'SQUARE'
-          );
-          this.changeMovingVertice(0);
-          selectedDrawable.vertices = tempSquare.vertices;
-        }
-      }
-      this.clearSelectedVertices();
-      this.addSelectedVertices();
-    }
+    this.resizeShape();
 
     // Draw shapes
     for (let i = 0; i < this.drawables.length; i++) {
@@ -400,6 +350,60 @@ class AppState {
       }
     }
     return -1;
+  }
+
+  private resizeShape() {
+    if (this.movingVerticeIndex != -1) {
+      const selectedDrawable = this.drawables[this.selectedShapeIndex];
+      const nativePosition = calculateNativePosition(this.realMousePosition);
+
+      if (selectedDrawable.shape == 'LINE' || selectedDrawable.shape == 'POLYGON') {
+        selectedDrawable.vertices[this.movingVerticeIndex] = nativePosition;
+      } else {
+        const pairVerticeIndex =
+          this.movingVerticeIndex - 2 < 0
+            ? this.movingVerticeIndex + 2
+            : this.movingVerticeIndex - 2;
+        const pairVerticeLocation = convertNativeToRealPosition(
+          selectedDrawable.vertices[pairVerticeIndex]
+        );
+
+        if (selectedDrawable.shape == 'RECTANGLE') {
+          const coordinates = generateRectangleVertices(
+            pairVerticeLocation,
+            this.realMousePosition
+          );
+          const tempRectangle = new Drawable(
+            this.gl,
+            this.program,
+            this.gl.TRIANGLE_FAN,
+            this.colorVector,
+            coordinates,
+            'RECTANGLE'
+          );
+          this.changeMovingVertice(2);
+          selectedDrawable.vertices = tempRectangle.vertices;
+        } else {
+          const coordinates = generateSquareVertices(
+            pairVerticeLocation,
+            this.realMousePosition.x - pairVerticeLocation.x,
+            this.realMousePosition.y - pairVerticeLocation.y
+          );
+          const tempSquare = new Drawable(
+            this.gl,
+            this.program,
+            this.gl.TRIANGLE_FAN,
+            this.colorVector,
+            coordinates,
+            'SQUARE'
+          );
+          this.changeMovingVertice(2);
+          selectedDrawable.vertices = tempSquare.vertices;
+        }
+      }
+      this.clearSelectedVertices();
+      this.addSelectedVertices();
+    }
   }
 
   /**
