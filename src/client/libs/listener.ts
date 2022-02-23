@@ -56,7 +56,10 @@ const handleCanvasClickEvent = (e: MouseEvent, appState: AppState): void => {
   if (mode == 'SELECTING') {
     if (appState.noSelectedShape()) {
       // If there is no selected shape
-      appState.selectShape(realPos);
+      const drawable = appState.selectShape(realPos);
+      if (drawable) {
+        appState.setColor(drawable.colorHex);
+      }
     } else {
       // If there is a selected shape
       if (appState.isMovingVertice()) {

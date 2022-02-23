@@ -12,6 +12,7 @@ interface DrawablePrimitives {
   vertices: NativePosition[];
   type: number;
   colorVector: Vec4;
+  colorHex: string;
   shape: string;
 }
 

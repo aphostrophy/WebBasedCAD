@@ -23,6 +23,7 @@ class AppState {
   private mode: AppStateMode = 'IDLE';
   private shape: DrawableType = 'LINE';
   private colorVector: Vec4 = [0.0, 0.0, 0.0, 1.0];
+  private colorHex: string = '#000000';
   private gl: WebGLRenderingContext;
   private drawables: Drawable[];
   private fileManager: FileManager;
@@ -113,6 +114,7 @@ class AppState {
             this.program,
             this.gl.LINES,
             this.colorVector,
+            this.colorHex,
             helperLineCoordinates,
             'LINE'
           );
@@ -127,6 +129,7 @@ class AppState {
             this.program,
             this.gl.LINES,
             this.colorVector,
+            this.colorHex,
             helperLineCoordinates,
             'LINE'
           );
@@ -183,8 +186,13 @@ class AppState {
     for (let i = 0; i < colorStringArray.length; i++) {
       colorVector[i] = parseInt(colorStringArray[i], 16) / 255;
     }
+    this.colorHex = colorHex;
     this.colorVector = colorVector;
     this.domHandler.setColor(colorHex);
+
+    if (this.selectedShapeIndex !== -1) {
+      this.drawables[this.selectedShapeIndex].setColor(colorVector, colorHex);
+    }
   }
 
   public addVertex(realPos: Position) {
@@ -208,6 +216,7 @@ class AppState {
         this.program,
         this.gl.LINES,
         this.colorVector,
+        this.colorHex,
         coordinates,
         'LINE'
       );
@@ -227,6 +236,7 @@ class AppState {
         this.program,
         this.gl.TRIANGLE_FAN,
         this.colorVector,
+        this.colorHex,
         coordinates,
         'SQUARE'
       );
@@ -243,6 +253,7 @@ class AppState {
         this.program,
         this.gl.TRIANGLE_FAN,
         this.colorVector,
+        this.colorHex,
         coordinates,
         'RECTANGLE'
       );
@@ -256,6 +267,7 @@ class AppState {
         this.program,
         this.gl.TRIANGLE_FAN,
         this.colorVector,
+        this.colorHex,
         coordinates,
         'POLYGON'
       );
@@ -292,6 +304,7 @@ class AppState {
         this.program,
         this.gl.TRIANGLE_FAN,
         this.colorVector,
+        this.colorHex,
         coordinates,
         'SQUARE'
       );
@@ -303,7 +316,7 @@ class AppState {
     this.selectedShapeVertices = [];
   }
 
-  public selectShape(pos: Position) {
+  public selectShape(pos: Position): Drawable | null {
     this.selectedShapeIndex = -1;
     this.clearSelectedVertices();
 
@@ -313,22 +326,24 @@ class AppState {
         if (insideLine(drawable.vertices, pos)) {
           this.selectedShapeIndex = i;
           this.addSelectedVertices();
-          break;
+          return this.drawables[i];
         }
       } else if (drawable.shape == 'SQUARE' || drawable.shape == 'RECTANGLE') {
         if (insideSquare(drawable.vertices, pos)) {
           this.selectedShapeIndex = i;
           this.addSelectedVertices();
-          break;
+          return this.drawables[i];
         }
       } else {
         if (insidePolygon(drawable.vertices, drawable.anchorPoint, pos)) {
           this.selectedShapeIndex = i;
           this.addSelectedVertices();
-          break;
+          return this.drawables[i];
         }
       }
     }
+
+    return null;
   }
 
   public noSelectedShape() {
@@ -378,6 +393,7 @@ class AppState {
             this.program,
             this.gl.TRIANGLE_FAN,
             this.colorVector,
+            this.colorHex,
             coordinates,
             'RECTANGLE'
           );
@@ -394,6 +410,7 @@ class AppState {
             this.program,
             this.gl.TRIANGLE_FAN,
             this.colorVector,
+            this.colorHex,
             coordinates,
             'SQUARE'
           );
@@ -417,6 +434,7 @@ class AppState {
       const drawableData: DrawablePrimitives = {
         vertices: drawable.vertices,
         colorVector: drawable.colorVector,
+        colorHex: drawable.colorHex,
         type: drawable.type,
         shape: drawable.shape,
       };
@@ -447,6 +465,7 @@ class AppState {
         this.program,
         drawablePrimitive.type,
         drawablePrimitive.colorVector,
+        drawablePrimitive.colorHex,
         vertices,
         drawablePrimitive.shape
       );

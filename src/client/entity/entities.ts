@@ -8,17 +8,19 @@ class Drawable implements DrawablePrimitives {
   /** Drawable Primitives */
   public vertices: NativePosition[];
   public type: number;
+  public shape: string;
   public colorVector: Vec4;
+  public colorHex: string;
   /** End of Drawable Primitives */
 
   public anchorPoint: Vec2;
-  public shape: string;
 
   constructor(
     gl: WebGLRenderingContext,
     program: WebGLProgram,
     type: number,
     colorVector: Vec4,
+    colorHex: string,
     vertices: number[],
     shape: string
   ) {
@@ -26,6 +28,7 @@ class Drawable implements DrawablePrimitives {
     this.program = program;
     this.type = type;
     this.colorVector = colorVector;
+    this.colorHex = colorHex;
     this.vertices = [];
     for (let i = 0; i < vertices.length; i += 2) {
       this.vertices.push({ x: vertices[i], y: vertices[i + 1] });
@@ -95,6 +98,11 @@ class Drawable implements DrawablePrimitives {
     }
 
     return [sigmaX / n, sigmaY / n];
+  }
+
+  setColor(colorVector: Vec4, colorHex: string): void {
+    this.colorVector = colorVector;
+    this.colorHex = colorHex;
   }
 }
 
