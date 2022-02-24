@@ -179,11 +179,23 @@ const insideSquare = (vertices: Array<Position>, position: Position) => {
   return req1 && req2 && req3 && req4;
 };
 
-const insidePolygon = (vertices: Array<Position>, anchorPoint: Vec2, position: Position) => {
+const insidePolygon = (vertices: Array<Position>, position: Position) => {
+  var is_in = false;
+  const n = vertices.length;
   const [x, y] = convertCoordinates(position.x, position.y);
-  const distance = calculateDistance(x, y, anchorPoint[0], anchorPoint[1]);
 
-  return distance < 0.15;
+  for (var i = 0; i < n - 1; ++i) {
+    const x1 = vertices[i].x;
+    const x2 = vertices[i + 1].x;
+    const y1 = vertices[i].y;
+    const y2 = vertices[i + 1].y;
+
+    if (y < y1 != y < y2 && x < ((x2 - x1) * (y - y1)) / (y2 - y1) + x1) {
+      is_in = !is_in;
+    }
+  }
+
+  return is_in;
 };
 
 // Generating square coordinates for a vertice

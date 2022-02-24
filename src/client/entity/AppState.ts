@@ -337,7 +337,8 @@ class AppState {
           return this.drawables[i];
         }
       } else {
-        if (insidePolygon(drawable.vertices, drawable.anchorPoint, pos)) {
+        // if (insidePolygon2(drawable.vertices, drawable.anchorPoint, pos)) {
+        if (insidePolygon(drawable.vertices, pos)) {
           this.selectedShapeIndex = i;
           this.addSelectedVertices();
           return this.drawables[i];
