@@ -17,6 +17,11 @@ const colorPicker = document.querySelector('#shape-color') as HTMLInputElement;
 const loadFileButton = document.querySelector('.load-file-button') as HTMLButtonElement;
 const saveFileButton = document.querySelector('.save-file-button') as HTMLButtonElement;
 
+const openHelpButton = document.querySelector('.open-help-button') as HTMLButtonElement;
+const closeHelpButton = document.querySelector('.close-help-button') as HTMLButtonElement;
+const helpModal = document.querySelector('.modal') as HTMLDivElement;
+const overlay = document.querySelector('.overlay') as HTMLDivElement;
+
 class DOMHandler {
   public window: Window & typeof globalThis;
   public document: Document;
@@ -29,6 +34,10 @@ class DOMHandler {
   public drawShape: HTMLSpanElement;
   public loadFileButton: HTMLButtonElement;
   public saveFileButton: HTMLButtonElement;
+  public openHelpButton: HTMLButtonElement;
+  public closeHelpButton: HTMLButtonElement;
+  public helpModal: HTMLDivElement;
+  public overlay: HTMLDivElement;
 
   constructor() {
     this.canvas = canvas;
@@ -44,6 +53,11 @@ class DOMHandler {
 
     this.loadFileButton = loadFileButton;
     this.saveFileButton = saveFileButton;
+
+    this.openHelpButton = openHelpButton;
+    this.closeHelpButton = closeHelpButton;
+    this.helpModal = helpModal;
+    this.overlay = overlay;
   }
 
   public getGl() {

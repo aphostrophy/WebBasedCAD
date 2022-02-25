@@ -83,7 +83,10 @@ class AppState {
   }
 
   private draw() {
-    // Changing the location of a vertice from a selected shape
+    this.gl.clearColor(1.0, 1.0, 1.0, 1.0);
+    this.gl.clear(this.gl.COLOR_BUFFER_BIT);
+    this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
+
     this.resizeShape();
 
     // Draw shapes

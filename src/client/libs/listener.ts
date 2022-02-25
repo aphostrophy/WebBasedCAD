@@ -38,6 +38,14 @@ const setupListeners = (appState: AppState) => {
   domHandler.saveFileButton.addEventListener('click', (ev: MouseEvent) =>
     handleSaveFile(ev, appState)
   );
+
+  domHandler.openHelpButton.addEventListener('click', (ev: MouseEvent) =>
+    handleOpenModal(ev, appState)
+  );
+
+  domHandler.closeHelpButton.addEventListener('click', (ev: MouseEvent) =>
+    handleCloseModal(ev, appState)
+  );
 };
 
 const trackCanvasMousePosition = (e: MouseEvent, appState: AppState): void => {
@@ -122,6 +130,33 @@ const handleLoadFile = (ev: MouseEvent, appState: AppState): void => {
 
 const handleSaveFile = (ev: MouseEvent, appState: AppState): void => {
   appState.save();
+};
+
+const handleOpenModal = (ev: MouseEvent, appState: AppState): void => {
+  const domHandler = appState.getDOMHandler();
+  const helpModal = domHandler.helpModal;
+  const overlay = domHandler.overlay;
+
+  if (!helpModal.classList.contains('active')) {
+    helpModal.classList.add('active');
+  }
+  if (!overlay.classList.contains('active')) {
+    overlay.classList.add('active');
+  }
+};
+
+const handleCloseModal = (ev: MouseEvent, appState: AppState): void => {
+  const domHandler = appState.getDOMHandler();
+  const helpModal = domHandler.helpModal;
+  const overlay = domHandler.overlay;
+
+  if (helpModal.classList.contains('active')) {
+    helpModal.classList.remove('active');
+  }
+
+  if (overlay.classList.contains('active')) {
+    overlay.classList.remove('active');
+  }
 };
 
 export { setupListeners };

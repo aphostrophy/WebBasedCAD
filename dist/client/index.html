@@ -56,6 +56,7 @@
         <div class="file-loader">
           <button class="load-file-button">Load</button>
           <button class="save-file-button">Save</button>
+          <button class="open-help-button">Help</button>
         </div>
       </div>
       <div class="right">
@@ -63,6 +64,43 @@
           <canvas id="glcanvas"></canvas>
         </div>
       </div>
+    </div>
+    <div class="help">
+      <div class="modal" id="modal">
+        <div class="menu-modal-header">
+          <div class="title">Controls</div>
+          <button class="close-help-button" class="close-button">&times;</button>
+        </div>
+        <div class="menu-modal-body">
+          <p>
+            1. Press Q to toggle App State Mode, possible modes: <strong>IDLE</strong>,
+            <strong>DRAWING</strong>, <strong>SELECTING</strong>
+          </p>
+          <p>
+            2. While in <strong>DRAWING</strong> state, click two points on the screen to draw
+            <strong>LINE</strong>, <strong>SQUARE</strong>, or <strong>RECTANGLE</strong>. You can
+            choose the item shape and color from the sidebar. There will be a visual line as a
+            visual que to help you draw
+          </p>
+          <p>
+            3. If you're drawing for <strong>POLYGON</strong>, you can click any number of times and
+            press <strong>ENTER</strong> after you're finished
+          </p>
+          <p>
+            4. While in <strong>SELECTING</strong> state, click on a shape to select it. There will
+            be a visual points on the edge of the shape as a visual que to help you select
+          </p>
+          <p>
+            5. You can click one of the visual points and move your mouse (don't drag, just click
+            once) to modify the shape
+          </p>
+          <p>6. While selecting you can also change the shape's color</p>
+          <p>7. Click save to save your shapes</p>
+          <p>8. Click load and choose one of your CAD project to load it into the app</p>
+          <p>9. Click help to open this menu</p>
+        </div>
+      </div>
+      <div class="overlay"></div>
     </div>
   </body>
 </html>
