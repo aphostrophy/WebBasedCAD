@@ -154,6 +154,16 @@ const yCoordinateinLine = (x: number, vertices: Array<Position>) => {
   return ((x - x1) / (x2 - x1)) * (y2 - y1) + y1;
 };
 
+const xCoordinateinLine = (y: number, vertices: Array<Position>) => {
+  const x1 = vertices[0].x;
+  const x2 = vertices[1].x;
+  const y1 = vertices[0].y;
+  const y2 = vertices[1].y;
+
+  // (y-y1)/(y2-y1) = (x-x1)/(x2-x1)
+  return ((y - y1) / (y2 - y1)) * (x2 - x1) + x1;
+};
+
 const insideLine = (vertices: Array<Position>, position: Position) => {
   // Lom diimplementasiin
   const [x, y] = convertCoordinates(position.x, position.y);
@@ -163,7 +173,10 @@ const insideLine = (vertices: Array<Position>, position: Position) => {
     y < Math.min(vertices[0].y, vertices[1].y) || y > Math.max(vertices[0].y, vertices[1].y);
 
   if (!failCondition1 && !failCondition2) {
-    return Math.abs(yCoordinateinLine(x, vertices) - y) < 0.05;
+    return (
+      Math.abs(yCoordinateinLine(x, vertices) - y) < 0.05 ||
+      Math.abs(xCoordinateinLine(y, vertices) - x) < 0.05
+    );
   }
   return false;
 };
